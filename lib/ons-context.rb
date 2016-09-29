@@ -5,8 +5,8 @@ require "active_model"
 require "virtus"
 
 module OnsContext
-  class Error < StandardError
-  end
+  Error             = Class.new(StandardError)
+  UnauthorizedError = Class.new(Error)
 
   class ValidationError < Error
     attr_reader :errors
@@ -19,4 +19,10 @@ module OnsContext
       errors.try(:messages)
     end
   end
+
+  FormError   = Class.new(ValidationError)
+  PolicyError = Class.new(ValidationError)
+  PolicyNotMetError = Class.new(PolicyError)
+
+
 end
