@@ -2,11 +2,35 @@ PATH
   remote: .
   specs:
     ons-context (0.1.0)
+      activemodel
+      activesupport
+      validates_timeliness (~> 3.0.15)
+      virtus (>= 1.0.2)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    activemodel (5.0.0.1)
+      activesupport (= 5.0.0.1)
+    activesupport (5.0.0.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      i18n (~> 0.7)
+      minitest (~> 5.1)
+      tzinfo (~> 1.1)
+    axiom-types (0.1.1)
+      descendants_tracker (~> 0.0.4)
+      ice_nine (~> 0.11.0)
+      thread_safe (~> 0.3, >= 0.3.1)
+    coercible (1.0.0)
+      descendants_tracker (~> 0.0.1)
+    concurrent-ruby (1.0.2)
+    descendants_tracker (0.0.4)
+      thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.2.5)
+    equalizer (0.0.11)
+    i18n (0.7.0)
+    ice_nine (0.11.2)
+    minitest (5.9.1)
     rake (10.5.0)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
@@ -21,6 +45,17 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
+    thread_safe (0.3.5)
+    timeliness (0.3.8)
+    tzinfo (1.2.2)
+      thread_safe (~> 0.1)
+    validates_timeliness (3.0.15)
+      timeliness (~> 0.3.7)
+    virtus (1.0.5)
+      axiom-types (~> 0.1)
+      coercible (~> 1.0)
+      descendants_tracker (~> 0.0, >= 0.0.3)
+      equalizer (~> 0.0, >= 0.0.9)
 
 PLATFORMS
   ruby
@@ -32,4 +67,4 @@ DEPENDENCIES
   rspec (~> 3.0)
 
 BUNDLED WITH
-   1.11.2
+   1.13.1
