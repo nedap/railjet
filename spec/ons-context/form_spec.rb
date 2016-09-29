@@ -21,7 +21,7 @@ describe OnsContext::Form do
       let(:form) { DummyForm.new }
 
       it "raises exception" do
-        expect { form.validate! }.to raise_exception(OnsContext::ValidationError) do |e|
+        expect { form.validate! }.to raise_exception(OnsContext::FormError) do |e|
           expect(e.errors["name"]).to include "can't be blank"
         end
       end

@@ -8,7 +8,7 @@ module OnsContext
     end
 
     def validate!
-      valid? or raise OnsContext::ValidationError.new(errors)
+      valid? || (raise OnsContext::FormError.new(errors) )
     end
   end
 end
