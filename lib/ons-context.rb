@@ -2,6 +2,7 @@ require "ons-context/version"
 
 require "active_support"
 require "active_model"
+require "active_model/merge_errors"
 require "virtus"
 
 module OnsContext
