@@ -22,7 +22,7 @@ describe OnsContext::Form do
 
       it "raises exception" do
         expect { form.validate! }.to raise_exception(OnsContext::FormError) do |e|
-          expect(e.errors["name"]).to include "can't be blank"
+          expect(e.errors["name"]).to include /can't be blank/
         end
       end
     end

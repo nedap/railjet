@@ -65,7 +65,7 @@ describe OnsContext::UseCase do
 
       it "raises exception" do
         expect { use_case.call(form) }.to raise_exception(OnsContext::PolicyError) do |e|
-          expect(e.errors[:user]).to include "not an admin"
+          expect(e.errors[:user]).to include /not an admin/
         end
       end
     end
