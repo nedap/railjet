@@ -23,6 +23,9 @@ module OnsContext
   FormError   = Class.new(ValidationError)
   PolicyError = Class.new(ValidationError)
   PolicyNotMetError = Class.new(PolicyError)
-
-
 end
+
+require "ons-context/validator"
+require "ons-context/form"
+require "ons-context/policy"
+require "ons-context/use_case"
