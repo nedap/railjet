@@ -20,7 +20,60 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Repository
+
+Assuming your app has 2 ActiveRecord models and uses 1 Cupido object
+
+```ruby
+class Employee < ActiveRecord::Base
+  has_many :events
+end
+
+class Event < ActiveRecord::Base
+  belongs_to :employee
+end
+```
+
+```ruby
+# app/repositories/registry.rb
+AppRegistry = Class.new(OnsContext::Repository::Registry)
+
+AppRegistry.register(:employee, EmployeeRepository, query: Employee, cupido: Cupido::Employee)
+AppRegistry.register(:event, EventRepository, query: Event)
+```
+
+```ruby
+# app/repositories/employee_repository.rb
+class EmployeeRepository
+  include OnsContext::Repository
+  include OnsContext::Repository::ActiveRecordRepository
+  include OnsContext::Repository::CupidoRepository
+  
+  def find_contract(employee)
+    cupido.find(employee.id).contract_agreement
+  end
+  
+  def employees_with_contract
+    query.all.select { |e| find_contract(e).present? }
+  end
+end
+
+# app/repositories/event_repository.rb
+class EventRepository
+  include OnsContext::Repository
+  include OnsContext::Repository::ActiveRecordRepository
+  
+  def find_for_employee(employee)
+    query.where(employee_id: employee.id).select(query_columns)
+  end
+  
+  def events_for_active_employees
+    registry.employees.employees_with_contract.map do |e|
+      find_for_employee(employee)
+    end
+  end
+end
+```
 
 ## Development
 
