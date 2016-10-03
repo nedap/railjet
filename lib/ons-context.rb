@@ -30,3 +30,6 @@ require "ons-context/validator"
 require "ons-context/form"
 require "ons-context/policy"
 require "ons-context/use_case"
+
+require "ons-context/repository/registry"
+require "ons-context/repository"
