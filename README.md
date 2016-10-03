@@ -20,6 +20,42 @@ Or install it yourself as:
 
 ## Usage
 
+### Auth
+```ruby
+# app/auth/ability.rb
+class Auth::Ability < OnsContext::Auth::Ability
+
+  def can_edit_event?(event)
+    activity(Auth::Event::Edit, event).can_be_edited_by?(actor)
+  end
+  
+  def can_take_over_event?(event)
+    activity(Auth::Event::Edit, event).can_be_taken_over_by?(actor)
+  end
+  
+  def can_delete_event?(event)
+    activity(Auth::Event::Delete, event).can_be_deleted_by?(actor)
+  end
+end
+```
+
+```ruby
+# app/auth/event/edit.rb
+class Auth::Event::Edit < OnsContext::Auth::Activity
+  def can_be_edited_by?(actor)
+  end
+  
+  def can_be_taken_over_by?(actor)
+  end
+end
+
+# app/auth/event/delete.rb
+class Auth::Event::Delete < OnsContext::Auth::Activity
+  def can_be_deleted_by?(actor)
+  end
+end
+```
+
 ### Repository
 
 Assuming your app has 2 ActiveRecord models and uses 1 Cupido object
