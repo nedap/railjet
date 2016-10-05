@@ -111,6 +111,97 @@ class EventRepository
 end
 ```
 
+### Form
+
+```ruby
+class EditForm
+  include OnsContext::Form
+  
+  attribute :name,        String
+  attribute :date,        Date
+  attribute :employee_id, Integer
+  
+  validates_presence_of :name, :date
+end
+```
+
+### Policy
+
+```ruby
+class EventEmployeeHasContract
+  object  :event
+  context :repository
+  
+  validate :employee_has_contract
+  
+  private
+  
+  def employee_has_contract
+    errors.add(:employee, "Inactive Employee") unless repository.employees.find_contract(event.employee)
+  end
+end
+```
+
+### UseCase
+
+```ruby
+class UseCase::EditEvent
+  include OnsContext::UseCase
+  
+  check_ability :can_edit_event?  
+  check_policy { |event| policy(EventEmployeeHasContract, event) } 
+  
+  context      :current_employee
+  repositories :events
+  
+  def call(id, form)
+    event = events.find_by_id(id)
+    
+    with_requirements_check(event) do
+      event.attributes = form.attributes
+      events.persist(event, as: current_employee)
+    end
+  end
+end
+```
+
+### Let's connect everything!
+
+```ruby
+# app/context.rb
+class AppContext < OnsContext::Context
+  def initialize(current_employee:, repository:)
+    super
+  end
+end
+```
+
+```ruby
+# app/controller/events_controller.rb
+class EventsController < ApplicationController
+  def edit
+    form  = setup_form(EditForm)
+    event = use_case(UseCase::EditEvent).call(params[:id], form)
+
+    respond_with event
+  end
+  
+  private
+  
+  # we need context that will be injected to domain objects
+  def context
+    AppContext.new(
+      current_employee: current_employee,
+      repository:       repository
+    )
+  end
+  
+  def repository
+    AppRegistry
+  end
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
