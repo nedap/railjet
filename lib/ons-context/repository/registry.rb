@@ -1,16 +1,33 @@
 module OnsContext
   module Repository
     class Registry
-      attr_reader :settings, :repositories
+      attr_reader :repositories
 
-      def initialize(settings = nil)
-        @settings     = settings
+      def initialize
         @repositories = {}
       end
 
       def register(name, repository, **kwargs)
         add_repo_to_registry(name, repository, kwargs)
         define_repo_accessor(name)
+      end
+
+      def initialize_copy(original)
+        super
+        @repositories = @repositories.dup
+      end
+
+      def new(**kwargs)
+        self.dup.tap do |registry|
+          kwargs.each do |name, val|
+            ivar_name = "@#{name}"
+
+            registry.instance_variable_set(ivar_name, val)
+            registry.define_singleton_method name do
+              instance_variable_get(ivar_name)
+            end
+          end
+        end
       end
 
       private
