@@ -1,6 +1,8 @@
 module OnsContext
   module UseCase
     extend ActiveSupport::Concern
+    include ::OnsContext::Util::UseCaseHelper
+    include ::OnsContext::Util::PolicyHelper
 
     attr_reader :context
 
@@ -29,14 +31,6 @@ module OnsContext
 
     def check_policy!(*args)
       true
-    end
-
-    def use_case(klass)
-      klass.new(context)
-    end
-
-    def policy(klass, *args)
-      klass.new(context, *args).validate!
     end
 
     module ClassMethods
