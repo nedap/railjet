@@ -37,6 +37,11 @@ module OnsContext
       def context(*context_members)
         delegate *context_members, to: :context
       end
+      
+      def repositories(*repositories)
+        context :repository
+        delegate *repositories, to: :repository
+      end
 
       def check_ability(ability_name)
         define_method :check_ability! do |*args|
