@@ -26,8 +26,11 @@ module OnsContext
   PolicyNotMetError = Class.new(PolicyError)
 end
 
+require "ons-context/context"
+
 require "ons-context/util/use_case_helper"
 require "ons-context/util/policy_helper"
+require "ons-context/util/form_helper"
 
 require "ons-context/validator"
 require "ons-context/form"
