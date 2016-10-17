@@ -18,7 +18,7 @@ module OnsContext
       end
 
       def new(**kwargs)
-        self.dup.tap do |registry|
+        self.clone.tap do |registry|
           kwargs.each do |name, val|
             ivar_name = "@#{name}"
 

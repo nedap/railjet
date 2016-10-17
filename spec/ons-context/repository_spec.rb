@@ -49,12 +49,15 @@ describe OnsContext::Repository::Registry do
 
   describe "#new" do
     let(:settings) { double(deadline: Date.today) }
+    let(:new_registry) { app_registry.new(settings: settings) }
 
     it "creates accessor for passed in arguments" do
-      new_registry = app_registry.new(settings: settings)
       expect(new_registry.settings).to eq settings
-
       expect(app_registry).not_to respond_to(:settings)
+    end
+    
+    it "has repositories defines" do
+      expect(new_registry).to respond_to :users
     end
   end
 end
