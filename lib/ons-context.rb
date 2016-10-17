@@ -39,3 +39,5 @@ require "ons-context/use_case"
 
 require "ons-context/repository/registry"
 require "ons-context/repository"
+
+require "ons-context/railtie" if defined?(Rails)
