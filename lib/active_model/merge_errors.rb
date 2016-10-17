@@ -1,7 +1,7 @@
 ActiveModel::Errors.class_eval do
   def <<(other)
     copy_messages_from(other)
-    copy_details_from(other)
+    copy_details_from(other) if respond_to?(:details)
 
     self
   end
