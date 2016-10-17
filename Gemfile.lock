@@ -2,18 +2,18 @@ PATH
   remote: .
   specs:
     ons-context (2.0.0.pre)
-      activemodel (= 4.2.6)
-      activesupport (= 4.2.6)
+      activemodel (~> 4.2)
+      activesupport (~> 4.2)
       validates_timeliness (~> 3.0.15)
       virtus (>= 1.0.2)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (4.2.6)
-      activesupport (= 4.2.6)
+    activemodel (4.2.7.1)
+      activesupport (= 4.2.7.1)
       builder (~> 3.1)
-    activesupport (4.2.6)
+    activesupport (4.2.7.1)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
@@ -78,4 +78,4 @@ DEPENDENCIES
   rspec (~> 3.0)
 
 BUNDLED WITH
-   1.13.2
+   1.13.5
