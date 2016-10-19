@@ -1,7 +1,7 @@
-require "ons-context/repository/active_record_repository"
-require "ons-context/repository/cupido_repository"
+require "railjet/repository/active_record_repository"
+require "railjet/repository/cupido_repository"
 
-module OnsContext
+module Railjet
   module Repository
     extend  ::ActiveSupport::Concern
 

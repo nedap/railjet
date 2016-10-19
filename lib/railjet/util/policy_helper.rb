@@ -1,4 +1,4 @@
-module OnsContext
+module Railjet
   module Util
     module PolicyHelper
       def policy(klass, *args)

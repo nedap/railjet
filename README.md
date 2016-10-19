@@ -1,4 +1,6 @@
-# Ons::Context
+# Railjet
+
+![Railjet](https://www.swisspasses.com/railpass/popup/railjet/slideshow/RailJet-Zuerich-St.-Anton-Transfer-Ticket-from-Swisspasses.com.jpg)
 
 Use Design Patterns, goddammit!
 
@@ -7,7 +9,7 @@ Use Design Patterns, goddammit!
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'ons-context'
+gem 'railjet'
 ```
 
 And then execute:
@@ -16,14 +18,14 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install ons-context
+    $ gem install railjet
 
 ## Usage
 
 ### Auth
 ```ruby
 # app/auth/ability.rb
-class Auth::Ability < OnsContext::Auth::Ability
+class Auth::Ability < Railjet::Auth::Ability
 
   def can_edit_event?(event)
     activity(Auth::Event::Edit, event).can_be_edited_by?(actor)
@@ -41,7 +43,7 @@ end
 
 ```ruby
 # app/auth/event/edit.rb
-class Auth::Event::Edit < OnsContext::Auth::Activity
+class Auth::Event::Edit < Railjet::Auth::Activity
   def can_be_edited_by?(actor)
   end
   
@@ -50,7 +52,7 @@ class Auth::Event::Edit < OnsContext::Auth::Activity
 end
 
 # app/auth/event/delete.rb
-class Auth::Event::Delete < OnsContext::Auth::Activity
+class Auth::Event::Delete < Railjet::Auth::Activity
   def can_be_deleted_by?(actor)
   end
 end
@@ -72,7 +74,7 @@ end
 
 ```ruby
 # app/repositories/registry.rb
-AppRegistry = OnsContext::Repository::Registry.new
+AppRegistry = Railjet::Repository::Registry.new
 
 AppRegistry.register(:employee, EmployeeRepository, query: Employee, cupido: Cupido::Employee)
 AppRegistry.register(:event,    EventRepository,    query: Event)
@@ -81,9 +83,9 @@ AppRegistry.register(:event,    EventRepository,    query: Event)
 ```ruby
 # app/repositories/employee_repository.rb
 class EmployeeRepository
-  include OnsContext::Repository
-  include OnsContext::Repository::ActiveRecordRepository
-  include OnsContext::Repository::CupidoRepository
+  include Railjet::Repository
+  include Railjet::Repository::ActiveRecordRepository
+  include Railjet::Repository::CupidoRepository
   
   def find_contract(employee)
     cupido.find(employee.id).contract_agreement
@@ -96,8 +98,8 @@ end
 
 # app/repositories/event_repository.rb
 class EventRepository
-  include OnsContext::Repository
-  include OnsContext::Repository::ActiveRecordRepository
+  include Railjet::Repository
+  include Railjet::Repository::ActiveRecordRepository
   
   def find_for_employee(employee)
     query.where(employee_id: employee.id).select(query_columns)
@@ -120,7 +122,7 @@ Of course, not validations are possible to perform in Form object. It doesn't ha
 
 ```ruby
 class EditForm
-  include OnsContext::Form
+  include Railjet::Form
   
   attribute :name,        String
   attribute :date,        Date
@@ -151,7 +153,7 @@ end
 d
 ```ruby
 class UseCase::EditEvent
-  include OnsContext::UseCase
+  include Railjet::UseCase
   
   check_ability :can_edit_event?  
   check_policy { |event| policy(EventEmployeeHasContract, event) } 
@@ -174,7 +176,7 @@ end
 
 ```ruby
 # app/context.rb
-class AppContext < OnsContext::Context
+class AppContext < Railjet::Context
   def initialize(current_employee:, repository:)
     super
   end
@@ -184,8 +186,8 @@ end
 ```ruby
 # app/controller/events_controller.rb
 class EventsController < ApplicationController
-  include OnsContext::Util::UseCaseHelper
-  include OnsContext::Util::FormHelper
+  include Railjet::Util::UseCaseHelper
+  include Railjet::Util::FormHelper
 
   def edit
     form  = form(EditForm) # this will raise exception if validation rules are not met

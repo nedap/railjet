@@ -1,7 +1,7 @@
-require "ons-context/context"
+require "railjet/context"
 
-describe OnsContext::Context do
-  class DummyAppContext < OnsContext::Context
+describe Railjet::Context do
+  class DummyAppContext < Railjet::Context
     def initialize(current_employee:, repository:)
       super
     end

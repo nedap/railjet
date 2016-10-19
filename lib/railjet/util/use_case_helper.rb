@@ -1,4 +1,4 @@
-module OnsContext
+module Railjet
   module Util
     module UseCaseHelper
       def use_case(klass)

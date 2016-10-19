@@ -1,4 +1,4 @@
-module OnsContext
+module Railjet
   module Auth
     class Activity
       attr_reader :settings, :object

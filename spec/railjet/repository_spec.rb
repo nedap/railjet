@@ -1,7 +1,7 @@
-require "ons-context/repository/registry"
-require "ons-context/repository"
+require "railjet/repository/registry"
+require "railjet/repository"
 
-describe OnsContext::Repository::Registry do
+describe Railjet::Repository::Registry do
   let(:app_registry) { Class.new(described_class).new }
 
   let(:query)  { double('UserRecord') }
@@ -9,9 +9,9 @@ describe OnsContext::Repository::Registry do
 
   let(:repo) do
     Class.new do
-      include OnsContext::Repository
-      include OnsContext::Repository::ActiveRecordRepository
-      include OnsContext::Repository::CupidoRepository
+      include Railjet::Repository
+      include Railjet::Repository::ActiveRecordRepository
+      include Railjet::Repository::CupidoRepository
 
       def build_user(hash = {})
         query.new(hash)

@@ -1,8 +1,8 @@
-require "ons-context/form"
+require "railjet/form"
 
-describe OnsContext::Form do
+describe Railjet::Form do
   class DummyForm
-    include OnsContext::Form
+    include Railjet::Form
 
     attribute :name, String
     validates :name, presence: true
@@ -21,7 +21,7 @@ describe OnsContext::Form do
       let(:form) { DummyForm.new }
 
       it "raises exception" do
-        expect { form.validate! }.to raise_exception(OnsContext::FormError) do |e|
+        expect { form.validate! }.to raise_exception(Railjet::FormError) do |e|
           expect(e.errors["name"]).to include /can't be blank/
         end
       end

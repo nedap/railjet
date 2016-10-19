@@ -1,4 +1,4 @@
-module OnsContext
+module Railjet
   module Repository
     class Registry
       attr_reader :repositories

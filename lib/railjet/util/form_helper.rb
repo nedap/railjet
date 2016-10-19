@@ -1,4 +1,4 @@
-module OnsContext
+module Railjet
   module Util
     module FormHelper
       def form(klass)

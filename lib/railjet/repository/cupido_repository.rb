@@ -1,4 +1,4 @@
-module OnsContext
+module Railjet
   module Repository
     module CupidoRepository
       extend ::ActiveSupport::Concern
