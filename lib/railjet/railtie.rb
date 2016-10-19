@@ -1,4 +1,4 @@
-module OnsContext
+module Railjet
   class Railtie < Rails::Railtie
     rake_tasks do
       load 'tasks/gettext_i18n.rake'

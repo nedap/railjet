@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'ons-context/version'
+require 'railjet/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "ons-context"
-  spec.version       = OnsContext::VERSION
+  spec.name          = "railjet"
+  spec.version       = Railjet::VERSION
   spec.authors       = ["Krzysztof Zalewski"]
   spec.email         = ["zlw.zalewski@gmail.com"]
 
-  spec.summary       = %q{Set of Design Patterns to use in Rails app}
-  spec.description   = %q{}
-  spec.homepage      = "https://github.com/nedap/ons-context"
+  spec.summary       = %q{Better architecture for high-speed railway}
+  spec.description   = %q{Design patterns for Ruby on Rails}
+  spec.homepage      = "https://github.com/nedap/railjet"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
   # delete this section to allow pushing this gem to any host.

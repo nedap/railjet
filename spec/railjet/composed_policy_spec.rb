@@ -1,9 +1,9 @@
-require "ons-context/composed_policy"
-require "ons-context/policy"
+require "railjet/composed_policy"
+require "railjet/policy"
 
-describe OnsContext::ComposedPolicy do
+describe Railjet::ComposedPolicy do
   class DummyFirstPolicy
-    include OnsContext::Policy
+    include Railjet::Policy
 
     validates_absence_of :foo
 
@@ -13,7 +13,7 @@ describe OnsContext::ComposedPolicy do
   end
 
   class DummySecondPolicy
-    include OnsContext::Policy
+    include Railjet::Policy
 
     validates_absence_of :foo
 
@@ -23,7 +23,7 @@ describe OnsContext::ComposedPolicy do
   end
 
   class DummyThirdPolicy
-    include OnsContext::Policy
+    include Railjet::Policy
 
     validates_absence_of :bar
 
@@ -33,7 +33,7 @@ describe OnsContext::ComposedPolicy do
   end
 
 
-  class DummyDeclarePolicy < OnsContext::ComposedPolicy
+  class DummyDeclarePolicy < Railjet::ComposedPolicy
     add DummyThirdPolicy
     add DummySecondPolicy, before: DummyThirdPolicy
     add DummyFirstPolicy,  after:  DummySecondPolicy
@@ -56,7 +56,7 @@ describe OnsContext::ComposedPolicy do
     let(:composed_policy) { DummyDeclarePolicy.new(app_context, registration) }
 
     it "raises exception from first invalid policy" do
-      expect { composed_policy.validate! }.to raise_exception(OnsContext::PolicyError) do |e|
+      expect { composed_policy.validate! }.to raise_exception(Railjet::PolicyError) do |e|
         errors = e.errors
 
         expect(errors).to     include :foo

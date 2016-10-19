@@ -1,8 +1,8 @@
-require "ons-context/policy"
+require "railjet/policy"
 
-describe OnsContext::Policy do
+describe Railjet::Policy do
   class DummyBeforeDeadlinePolicy
-    include OnsContext::Policy
+    include Railjet::Policy
 
     object  :registration
     context :settings
@@ -28,7 +28,7 @@ describe OnsContext::Policy do
     let(:settings)     { double(deadline: Date.parse('31-12-2015')) }
 
     it "raises exception" do
-      expect { policy.validate! }.to raise_exception(OnsContext::PolicyError) do |e|
+      expect { policy.validate! }.to raise_exception(Railjet::PolicyError) do |e|
         expect(e.errors[:base]).to include /deadline exceeded/
       end
     end

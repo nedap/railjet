@@ -1,8 +1,8 @@
-module OnsContext
+module Railjet
   module UseCase
     extend ActiveSupport::Concern
-    include ::OnsContext::Util::UseCaseHelper
-    include ::OnsContext::Util::PolicyHelper
+    include ::Railjet::Util::UseCaseHelper
+    include ::Railjet::Util::PolicyHelper
 
     attr_reader :context
 
@@ -14,15 +14,15 @@ module OnsContext
       if check_ability!(*args)
         yield if block_given?
       else
-        raise OnsContext::UnauthorizedError
+        raise Railjet::UnauthorizedError
       end
     end
 
     def with_policy_check(*args)
       check_policy!(*args)
       yield if block_given?
-    rescue OnsContext::PolicyError => e
-      raise OnsContext::PolicyNotMetError.new(e.errors)
+    rescue Railjet::PolicyError => e
+      raise Railjet::PolicyNotMetError.new(e.errors)
     end
 
     def check_ability!(*args)

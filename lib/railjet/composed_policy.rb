@@ -1,4 +1,4 @@
-module OnsContext
+module Railjet
   class ComposedPolicy
     class_attribute :policies
 

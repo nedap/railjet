@@ -1,4 +1,4 @@
-module OnsContext
+module Railjet
   # @private Use either form or policy
   module Validator
     extend  ::ActiveSupport::Concern

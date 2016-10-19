@@ -1,7 +1,7 @@
-module OnsContext
+module Railjet
   module Policy
     extend  ::ActiveSupport::Concern
-    include OnsContext::Validator
+    include Railjet::Validator
 
     attr_reader :context, :object
 
@@ -10,7 +10,7 @@ module OnsContext
     end
 
     def validate!
-      valid? || (raise OnsContext::PolicyError.new(errors) )
+      valid? || (raise Railjet::PolicyError.new(errors) )
     end
 
     module ClassMethods

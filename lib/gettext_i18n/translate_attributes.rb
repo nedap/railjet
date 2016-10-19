@@ -60,13 +60,13 @@ module GettextI18n
 
     class PolicyAttributesFinder < AttributeFinder
       def base_class
-        OnsContext::Policy
+        Railjet::Policy
       end
     end
 
     class FormAttributesFinder < AttributeFinder
       def base_class
-        OnsContext::Form
+        Railjet::Form
       end
     end
   end

@@ -1,11 +1,11 @@
-require "ons-context/version"
+require "railjet/version"
 
 require "active_support"
 require "active_model"
 require "active_model/merge_errors"
 require "virtus"
 
-module OnsContext
+module Railjet
   Error             = Class.new(StandardError)
   UnauthorizedError = Class.new(Error)
 
@@ -26,18 +26,18 @@ module OnsContext
   PolicyNotMetError = Class.new(PolicyError)
 end
 
-require "ons-context/context"
+require "railjet/context"
 
-require "ons-context/util/use_case_helper"
-require "ons-context/util/policy_helper"
-require "ons-context/util/form_helper"
+require "railjet/util/use_case_helper"
+require "railjet/util/policy_helper"
+require "railjet/util/form_helper"
 
-require "ons-context/validator"
-require "ons-context/form"
-require "ons-context/policy"
-require "ons-context/use_case"
+require "railjet/validator"
+require "railjet/form"
+require "railjet/policy"
+require "railjet/use_case"
 
-require "ons-context/repository/registry"
-require "ons-context/repository"
+require "railjet/repository/registry"
+require "railjet/repository"
 
-require "ons-context/railtie" if defined?(Rails)
+require "railjet/railtie" if defined?(Rails)

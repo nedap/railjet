@@ -1,6 +1,6 @@
-require "ons-context/use_case"
+require "railjet/use_case"
 
-describe OnsContext::UseCase do
+describe Railjet::UseCase do
   let(:app_context)  { double(current_user: "John") }
 
   it "can be initialized with context" do
@@ -34,7 +34,7 @@ describe OnsContext::UseCase do
       end
 
       it "raises exception" do
-        expect { use_case.call(form) }.to raise_exception(OnsContext::UnauthorizedError)
+        expect { use_case.call(form) }.to raise_exception(Railjet::UnauthorizedError)
       end
     end
 
@@ -64,7 +64,7 @@ describe OnsContext::UseCase do
       end
 
       it "raises exception" do
-        expect { use_case.call(form) }.to raise_exception(OnsContext::PolicyError) do |e|
+        expect { use_case.call(form) }.to raise_exception(Railjet::PolicyError) do |e|
           expect(e.errors[:user]).to include /not an admin/
         end
       end
@@ -85,7 +85,7 @@ end
 
 
 class DummyCreateArticle
-  include OnsContext::UseCase
+  include Railjet::UseCase
 
   context :current_user
 
@@ -125,6 +125,6 @@ class DummyPolicy
   end
 
   def validate!
-    raise OnsContext::PolicyError.new({ user: ["not an admin"]} ) unless user.admin?
+    raise Railjet::PolicyError.new({ user: ["not an admin"]} ) unless user.admin?
   end
 end

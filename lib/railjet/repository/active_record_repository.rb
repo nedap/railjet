@@ -1,4 +1,4 @@
-module OnsContext
+module Railjet
   module Repository
     module ActiveRecordRepository
       extend ::ActiveSupport::Concern

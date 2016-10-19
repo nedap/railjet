@@ -1,4 +1,4 @@
-module OnsContext
+module Railjet
   class Context
     def initialize(**kwargs)
       define_accessors(kwargs)
