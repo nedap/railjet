@@ -1,8 +1,6 @@
-# Railjet
+# Railjet, architecture for high-speed railway
 
 ![Railjet](https://www.swisspasses.com/railpass/popup/railjet/slideshow/RailJet-Zuerich-St.-Anton-Transfer-Ticket-from-Swisspasses.com.jpg)
-
-Use Design Patterns, goddammit!
 
 ## Installation
 
@@ -21,42 +19,6 @@ Or install it yourself as:
     $ gem install railjet
 
 ## Usage
-
-### Auth
-```ruby
-# app/auth/ability.rb
-class Auth::Ability < Railjet::Auth::Ability
-
-  def can_edit_event?(event)
-    activity(Auth::Event::Edit, event).can_be_edited_by?(actor)
-  end
-  
-  def can_take_over_event?(event)
-    activity(Auth::Event::Edit, event).can_be_taken_over_by?(actor)
-  end
-  
-  def can_delete_event?(event)
-    activity(Auth::Event::Delete, event).can_be_deleted_by?(actor)
-  end
-end
-```
-
-```ruby
-# app/auth/event/edit.rb
-class Auth::Event::Edit < Railjet::Auth::Activity
-  def can_be_edited_by?(actor)
-  end
-  
-  def can_be_taken_over_by?(actor)
-  end
-end
-
-# app/auth/event/delete.rb
-class Auth::Event::Delete < Railjet::Auth::Activity
-  def can_be_deleted_by?(actor)
-  end
-end
-```
 
 ### Repository
 
@@ -113,22 +75,65 @@ class EventRepository
 end
 ```
 
-### Form
-
-Form is a decorator for request params.
-In normal Rails app params are just strings, and they're coerced inside ActiveRecord model. We definitely don't want that. We want to coerce and validate as soon as possible.
-
-Of course, not validations are possible to perform in Form object. It doesn't have access to the context, so there are no settings, no repository. Do as much as possible here, and put more complex stuff in policies
+### UseCase
 
 ```ruby
-class EditForm
-  include Railjet::Form
+class UseCase::EditEvent
+  include Railjet::UseCase
   
-  attribute :name,        String
-  attribute :date,        Date
-  attribute :employee_id, Integer
+  # auth module is described below
+  check_ability :can_edit_event?  
   
-  validates_presence_of :name, :date
+  # policy module is described below
+  check_policy { |event| policy(EventEmployeeHasContract, event) } 
+  
+  context      :current_employee
+  repositories :events
+  
+  def call(id, form)
+    event = events.find_by_id(id)
+    
+    with_requirements_check(event) do
+      event.attributes = form.attributes
+      events.persist(event, as: current_employee)
+    end
+  end
+end
+```
+
+### Auth
+```ruby
+# app/auth/ability.rb
+class Auth::Ability < Railjet::Auth::Ability
+
+  def can_edit_event?(event)
+    activity(Auth::Event::Edit, event).can_be_edited_by?(actor)
+  end
+  
+  def can_take_over_event?(event)
+    activity(Auth::Event::Edit, event).can_be_taken_over_by?(actor)
+  end
+  
+  def can_delete_event?(event)
+    activity(Auth::Event::Delete, event).can_be_deleted_by?(actor)
+  end
+end
+```
+
+```ruby
+# app/auth/event/edit.rb
+class Auth::Event::Edit < Railjet::Auth::Activity
+  def can_be_edited_by?(actor)
+  end
+  
+  def can_be_taken_over_by?(actor)
+  end
+end
+
+# app/auth/event/delete.rb
+class Auth::Event::Delete < Railjet::Auth::Activity
+  def can_be_deleted_by?(actor)
+  end
 end
 ```
 
@@ -149,26 +154,22 @@ class EventEmployeeHasContract
 end
 ```
 
-### UseCase
-d
+### Form
+
+Form is a decorator for request params.
+In normal Rails app params are just strings, and they're coerced inside ActiveRecord model. We definitely don't want that. We want to coerce and validate as soon as possible.
+
+Of course, not validations are possible to perform in Form object. It doesn't have access to the context, so there are no settings, no repository. Do as much as possible here, and put more complex stuff in policies
+
 ```ruby
-class UseCase::EditEvent
-  include Railjet::UseCase
+class EditForm
+  include Railjet::Form
   
-  check_ability :can_edit_event?  
-  check_policy { |event| policy(EventEmployeeHasContract, event) } 
+  attribute :name,        String
+  attribute :date,        Date
+  attribute :employee_id, Integer
   
-  context      :current_employee
-  repositories :events
-  
-  def call(id, form)
-    event = events.find_by_id(id)
-    
-    with_requirements_check(event) do
-      event.attributes = form.attributes
-      events.persist(event, as: current_employee)
-    end
-  end
+  validates_presence_of :name, :date
 end
 ```
 
