@@ -3,6 +3,10 @@ module Railjet
     module ActiveRecordRepository
       extend ::ActiveSupport::Concern
 
+      def all
+        query.all
+      end
+
       def find_by_ids(ids)
         query.where(id: ids)
       end
