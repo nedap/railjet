@@ -1,5 +1,5 @@
-require "railjet/repository/active_record_repository"
-require "railjet/repository/cupido_repository"
+require "railjet/repository/active_record"
+require "railjet/repository/cupido"
 
 module Railjet
   module Repository
@@ -11,6 +11,9 @@ module Railjet
     def initialize(registry, **kwargs)
       @registry = registry
       define_accessors(**kwargs)
+
+      initialize_record_repository if respond_to?(:record)
+      initialize_cupido_repository if respond_to?(:cupido)
     end
 
     private
@@ -24,6 +27,22 @@ module Railjet
 
     def repository_module
       @repository_module ||= Module.new.tap { |m| self.class.include(m) }
+    end
+
+    def initialize_record_repository
+      if defined?(ActiveRecordRepository)
+        def self.record
+          @record ||= ActiveRecordRepository.new(registry, super)
+        end
+      end
+    end
+
+    def initialize_cupido_repository
+      if defined?(CupidoRepository)
+        def self.cupido
+          @cupido ||= CupidoRepository.new(registry, super)
+        end
+      end
     end
   end
 end

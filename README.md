@@ -38,38 +38,52 @@ end
 # app/repositories/registry.rb
 AppRegistry = Railjet::Repository::Registry.new
 
-AppRegistry.register(:employee, EmployeeRepository, query: Employee, cupido: Cupido::Employee)
-AppRegistry.register(:event,    EventRepository,    query: Event)
+AppRegistry.register(:employee, EmployeeRepository, record: Employee, cupido: Cupido::Employee)
+AppRegistry.register(:event,    EventRepository,    record: Event)
 ```
 
 ```ruby
 # app/repositories/employee_repository.rb
 class EmployeeRepository
   include Railjet::Repository
-  include Railjet::Repository::ActiveRecordRepository
-  include Railjet::Repository::CupidoRepository
   
-  def find_contract(employee)
-    cupido.find(employee.id).contract_agreement
+  delegate :find_contract, to: :cupido
+  
+  def employees_with_contract(employees = record.find_all)
+    employees.select { |e| find_contract(e).present? }
   end
   
-  def employees_with_contract
-    query.all.select { |e| find_contract(e).present? }
+  class ActiveRecordRepository
+    include Railjet::Repository::ActiveRecord    
+  end
+  
+  class CupidoRepository
+    include Railjet::Repository::Cupido
+    
+    def find_contract(employee)
+      cupido.find(employee.external_id).contract_agreement
+    end
   end
 end
 
 # app/repositories/event_repository.rb
 class EventRepository
   include Railjet::Repository
-  include Railjet::Repository::ActiveRecordRepository
   
-  def find_for_employee(employee)
-    query.where(employee_id: employee.id).select(query_columns)
-  end
+  delegate :employees,         to: :registry
+  delegate :find_for_employee, to: :record
   
   def events_for_active_employees
-    registry.employees.employees_with_contract.map do |e|
-      find_for_employee(employee)
+    employees.employees_with_contract.map do |e|
+      find_for_employee(e)
+    end
+  end
+  
+  class ActiveRecordRepository
+    include Railjet::Repository::ActiveRecordRepository
+    
+    def find_for_employee(employee)
+      record.where(employee_id: employee.id).select(query_columns)
     end
   end
 end

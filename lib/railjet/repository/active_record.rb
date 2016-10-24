@@ -1,18 +1,27 @@
 module Railjet
   module Repository
-    module ActiveRecordRepository
+    module ActiveRecord
       extend ::ActiveSupport::Concern
 
+      included do
+        attr_reader :registry, :record
+      end
+
+      def initialize(registry, record)
+        @registry = registry
+        @record   = record
+      end
+
       def all
-        query.all
+        record.all
       end
 
       def find_by_ids(ids)
-        query.where(id: ids)
+        record.where(id: ids)
       end
 
       def build(args = {}, &block)
-        query.new(args, &block)
+        record.new(args, &block)
       end
 
       def duplicate(object, args = {})
@@ -31,13 +40,13 @@ module Railjet
       end
 
       def transaction(&block)
-        query.transaction(&block)
+        record.transaction(&block)
       end
 
       private
 
       def query_columns
-        columns = (query.column_names - [:created_at, :updated_at])
+        columns = (record.column_names - [:created_at, :updated_at])
         columns.map { |column_name| "#{query.table_name}.#{column_name}" }
       end
     end
