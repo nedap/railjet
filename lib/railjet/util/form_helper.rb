@@ -2,7 +2,7 @@ module Railjet
   module Util
     module FormHelper
       def form(klass)
-        klass.new(clean_params).validate!
+        klass.new(clean_params).tap(&:validate!)
       end
 
       private
