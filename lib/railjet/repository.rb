@@ -30,17 +30,17 @@ module Railjet
     end
 
     def initialize_record_repository
-      if defined?(ActiveRecordRepository)
+      if defined?(self.class::ActiveRecordRepository)
         def self.record
-          @record ||= ActiveRecordRepository.new(registry, super)
+          @record ||= self.class::ActiveRecordRepository.new(registry, super)
         end
       end
     end
 
     def initialize_cupido_repository
-      if defined?(CupidoRepository)
+      if defined?(self.class::CupidoRepository)
         def self.cupido
-          @cupido ||= CupidoRepository.new(registry, super)
+          @cupido ||= self.class::CupidoRepository.new(registry, super)
         end
       end
     end
