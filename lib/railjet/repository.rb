@@ -10,15 +10,15 @@ module Railjet
 
     def initialize(registry, **kwargs)
       @registry = registry
-      define_accessors(kwargs)
+      define_accessors(**kwargs)
     end
 
     private
 
-    def define_accessors(kwargs)
+    def define_accessors(**kwargs)
       kwargs.each do |name, val|
         repository_module.send(:define_method, name) { val }
-        repository_module.send(:private, name)
+        repository_module.send(:protected, name)
       end
     end
 
