@@ -45,6 +45,40 @@ describe Railjet::Repository::Registry do
         users.push_user(name: "John Doe")
       end
     end
+
+    describe "overriding accessors" do
+      let(:repo) do
+        Class.new do
+          include Railjet::Repository
+
+          def find_foo
+            query.foo
+          end
+
+          private
+
+          def query
+            @query ||= FooRepository.new(super)
+          end
+
+          class FooRepository
+            def initialize(query)
+              @query = query
+            end
+
+            def foo
+              "Foo"
+            end
+          end
+        end
+      end
+
+      let(:users) { app_registry.users }
+
+      it "works with #super" do
+        expect(users.find_foo).to eq "Foo"
+      end
+    end
   end
 
   describe "#new" do
