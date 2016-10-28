@@ -1,97 +1,66 @@
-require "railjet/repository/registry"
 require "railjet/repository"
 
-describe Railjet::Repository::Registry do
-  let(:app_registry) { Class.new(described_class).new }
+describe Railjet::Repository do
+  let(:registry) { double }
+  let(:query)    { double('UserRecord') }
+  let(:cupido)   { double('Cupido::User') }
 
-  let(:query)  { double('UserRecord') }
-  let(:cupido) { double('Cupido::User') }
-
-  let(:repo) do
-    Class.new do
-      include Railjet::Repository
-      include Railjet::Repository::ActiveRecordRepository
-      include Railjet::Repository::CupidoRepository
-
-      def build_user(hash = {})
-        query.new(hash)
-      end
-
-      def push_user(hash = {})
-        cupido.push(hash)
-      end
-    end
+  class DummyOneRepository
+    include Railjet::Repository
   end
 
-  before do
-    app_registry.register(:user, repo, query: query, cupido: cupido)
+  class DummyTwoRepository
+    include Railjet::Repository
   end
 
-  describe "#register" do
-    it "creates accessor method" do
-      expect(app_registry).to respond_to :users
+  class AnotherDummyRepository
+    include Railjet::Repository
+
+    def foo
+      query.foo
     end
 
-    describe "defined accessor" do
-      let(:users) { app_registry.users }
+    private
 
-      it "calls ActiveRecord properly" do
-        expect(query).to receive(:new).with(name: "John Doe")
-        users.build_user(name: "John Doe")
-      end
-
-      it "calls Cupido properly" do
-        expect(cupido).to receive(:push).with(name: "John Doe")
-        users.push_user(name: "John Doe")
-      end
+    def query
+      @query ||= FooRepository.new(super)
     end
 
-    describe "overriding accessors" do
-      let(:repo) do
-        Class.new do
-          include Railjet::Repository
-
-          def find_foo
-            query.foo
-          end
-
-          private
-
-          def query
-            @query ||= FooRepository.new(super)
-          end
-
-          class FooRepository
-            def initialize(query)
-              @query = query
-            end
-
-            def foo
-              "Foo"
-            end
-          end
-        end
-      end
-
-      let(:users) { app_registry.users }
-
-      it "works with #super" do
-        expect(users.find_foo).to eq "Foo"
+    class FooRepository < Struct.new(:query)
+      def foo
+        "Bar"
       end
     end
   end
 
   describe "#new" do
-    let(:settings) { double(deadline: Date.today) }
-    let(:new_registry) { app_registry.new(settings: settings) }
+    context "with one DAO" do
+      subject(:repo) { DummyOneRepository.new(registry, cupido: cupido) }
 
-    it "creates accessor for passed in arguments" do
-      expect(new_registry.settings).to eq settings
-      expect(app_registry).not_to respond_to(:settings)
+      it "creates single accessor" do
+        expect(repo.send(:cupido)).to eq cupido
+      end
+
+      it "does not create another accessor" do
+        expect { repo.send(:query) }.to raise_exception(NoMethodError)
+      end
     end
-    
-    it "has repositories defines" do
-      expect(new_registry).to respond_to :users
+
+    context "with two DAO" do
+      subject(:repo) { DummyTwoRepository.new(registry, query: query, cupido: cupido) }
+
+      it "creates private accessors" do
+        expect(repo.send(:query)).to  eq query
+        expect(repo.send(:cupido)).to eq cupido
+      end
+    end
+
+    describe "overriding accessors" do
+      subject(:repo) { AnotherDummyRepository.new(registry, query: query) }
+
+      it "works with super" do
+        expect(repo.foo).to eq "Bar"
+      end
     end
   end
 end
