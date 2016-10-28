@@ -17,13 +17,13 @@ module Railjet
 
     def define_accessors(kwargs)
       kwargs.each do |name, val|
-        instance_variable_set("@#{name}", val)
-
-        self.class.class_eval do
-          attr_reader name
-          private     name
-        end
+        repository_module.send(:define_method, name) { val }
+        repository_module.send(:private, name)
       end
+    end
+
+    def repository_module
+      @repository_module ||= Module.new.tap { |m| self.class.include(m) }
     end
   end
 end
