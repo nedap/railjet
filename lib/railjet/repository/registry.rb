@@ -4,61 +4,52 @@ module Railjet
       attr_reader :repositories
 
       def initialize
-        @repositories = {}
+        @repositories             = {}
+        @initialized_repositories = {}
       end
 
       def register(name, repository, **kwargs)
-        add_repo_to_registry(name, repository, kwargs)
-        define_repo_accessor(name)
-      end
-
-      def initialize_copy(original)
-        super
-        @repositories = @repositories.dup
+        add_to_registry(name, repository, kwargs)
+        define_accessor(name)
       end
 
       def new(**kwargs)
         self.clone.tap do |registry|
-          kwargs.each do |name, val|
-            ivar_name = "@#{name}"
+          clone_module = Module.new.tap { |m| registry.extend(m) }
 
-            registry.instance_variable_set(ivar_name, val)
-            registry.define_singleton_method name do
-              instance_variable_get(ivar_name)
-            end
+          kwargs.each do |name, val|
+            clone_module.send(:define_method, name) { val }
           end
         end
       end
 
       private
 
-      def add_repo_to_registry(name, repository, args = {})
+      def add_to_registry(name, repository, args = {})
         @repositories.merge!(name => {
           repository: repository,
           args:       args
         })
       end
 
-      def define_repo_accessor(name)
-        pluralized_name = name.to_s.pluralize
-        pluralized_ivar = "@#{pluralized_name}"
+      def get_from_registry(name)
+        @repositories[name]
+      end
 
-        define_singleton_method pluralized_name do
-          if instance_variable_defined?(pluralized_ivar)
-            instance_variable_get(pluralized_ivar)
-          else
-            instance_variable_set(pluralized_ivar, call_repo_accessor(name))
-          end
+      def initialize_repo(name)
+        @initialized_repositories[name] ||= begin
+          repo = get_from_registry(name)
+          repo[:repository].new(self, **repo[:args])
         end
       end
 
-      def call_repo_accessor(name)
-        repo = @repositories[name]
+      def define_accessor(name)
+        pluralized_name = name.to_s.pluralize
+        registry_module.send(:define_method, pluralized_name) { initialize_repo(name) }
+      end
 
-        klass = repo[:repository]
-        args  = repo[:args]
-
-        klass.new(self, **args)
+      def registry_module
+        @registry_module ||= Module.new.tap { |m| self.class.include(m) }
       end
     end
   end
