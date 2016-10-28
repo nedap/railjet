@@ -15,21 +15,30 @@ module Railjet
 
       def new(**kwargs)
         self.clone.tap do |registry|
-          clone_module = Module.new.tap { |m| registry.extend(m) }
+          unless kwargs.blank?
+            clone_module = Module.new.tap { |m| registry.extend(m) }
 
-          kwargs.each do |name, val|
-            clone_module.send(:define_method, name) { val }
+            kwargs.each do |name, val|
+              clone_module.send(:define_method, name) { val }
+            end
           end
         end
       end
 
       private
 
+      def initialize_copy(original)
+        super
+        @registry_module = nil
+        @repositories    = original.repositories.dup
+      end
+
       def add_to_registry(name, repository, args = {})
-        @repositories.merge!(name => {
+        @initialized_repositories[name] = nil
+        @repositories[name] = {
           repository: repository,
           args:       args
-        })
+        }
       end
 
       def get_from_registry(name)
@@ -38,8 +47,11 @@ module Railjet
 
       def initialize_repo(name)
         @initialized_repositories[name] ||= begin
-          repo = get_from_registry(name)
-          repo[:repository].new(self, **repo[:args])
+          repo  = get_from_registry(name)
+          klass = repo[:repository]
+          args  = repo[:args]
+
+          klass.new(self, **args)
         end
       end
 

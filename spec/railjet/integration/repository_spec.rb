@@ -85,4 +85,33 @@ describe "Repository & Registry" do
       registry.users.save_in_cupido(user)
     end
   end
+
+  describe "overriding one of the repos" do
+    let(:new_registry) { registry.clone }
+
+    class DummyRoleRepository
+      include Railjet::Repository
+    end
+
+    class AnotherTaskRepository
+      include Railjet::Repository
+    end
+
+    before do
+      new_registry.register(:role, DummyRoleRepository)
+      new_registry.register(:task, AnotherTaskRepository)
+    end
+
+    it "adds new repository" do
+      expect(new_registry.roles).to be_instance_of DummyRoleRepository
+    end
+
+    it "overrides old one" do
+      expect(new_registry.tasks).to be_instance_of AnotherTaskRepository
+    end
+
+    it "does not change original" do
+      expect(registry.tasks).to be_instance_of DummyTaskRepository
+    end
+  end
 end
