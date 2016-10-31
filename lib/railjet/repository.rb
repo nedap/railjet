@@ -12,8 +12,8 @@ module Railjet
       @registry = registry
       define_accessors(**kwargs)
 
-      initialize_record_repository if respond_to?(:record)
-      initialize_cupido_repository if respond_to?(:cupido)
+      initialize_record_repository if respond_to?(:record, true)
+      initialize_cupido_repository if respond_to?(:cupido, true)
     end
 
     private

@@ -16,35 +16,49 @@ describe "Repository & Registry" do
 
   class DummyUserRepository
     include Railjet::Repository
-    include Railjet::Repository::ActiveRecordRepository
-    include Railjet::Repository::CupidoRepository
 
-    def all_with_tasks
-      query.all.map do |user|
-        user.tasks = registry.tasks.find_for_user(user)
-        user
+    delegate :all_with_tasks, to: :record
+    delegate :persist,        to: :cupido
+
+    class ActiveRecordRepository
+      include Railjet::Repository::ActiveRecord
+
+      def all_with_tasks
+        record.all.map do |user|
+          user.tasks = registry.tasks.find_for_user(user)
+          user
+        end
       end
     end
 
-    def save_in_cupido(user)
-      if registry.respond_to?(:settings) && registry.settings.call_cupido
-        cupido.push(user)
+    class CupidoRepository
+      include Railjet::Repository::Cupido
+
+      def persist(user)
+        if registry.respond_to?(:settings) && registry.settings.call_cupido
+          cupido.push(user)
+        end
       end
     end
   end
 
   class DummyTaskRepository
     include Railjet::Repository
-    include Railjet::Repository::ActiveRecordRepository
 
-    def find_for_user(user)
-      query.where(user_id: user.id)
+    delegate :find_for_user, to: :record
+
+    class ActiveRecordRepository
+      include Railjet::Repository::ActiveRecord
+
+      def find_for_user(user)
+        record.where(user_id: user.id)
+      end
     end
   end
 
   before do
-    registry.register(:user, DummyUserRepository, query: DummyUserRecord, cupido: DummyUserCupido)
-    registry.register(:task, DummyTaskRepository, query: DummyTaskRecord)
+    registry.register(:user, DummyUserRepository, record: DummyUserRecord, cupido: DummyUserCupido)
+    registry.register(:task, DummyTaskRepository, record: DummyTaskRecord)
   end
 
   describe "calling another repo" do
@@ -77,12 +91,12 @@ describe "Repository & Registry" do
 
     it "adds per-request accessors" do
       expect(DummyUserCupido).to receive(:push).with(user)
-      new_registry.users.save_in_cupido(user)
+      new_registry.users.persist(user)
     end
 
     it "does not change old registry" do
       expect(DummyUserRecord).not_to receive(:push)
-      registry.users.save_in_cupido(user)
+      registry.users.persist(user)
     end
   end
 

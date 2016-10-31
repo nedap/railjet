@@ -47,7 +47,7 @@ module Railjet
 
       def query_columns
         columns = (record.column_names - [:created_at, :updated_at])
-        columns.map { |column_name| "#{query.table_name}.#{column_name}" }
+        columns.map { |column_name| "#{record.table_name}.#{column_name}" }
       end
     end
   end
