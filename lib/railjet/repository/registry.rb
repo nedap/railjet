@@ -1,8 +1,9 @@
 module Railjet
   module Repository
     class Registry
-      attr_reader :repositories
-
+      attr_reader :repositories, :initialized_repositories
+      protected   :repositories, :initialized_repositories
+      
       def initialize
         @repositories             = {}
         @initialized_repositories = {}
@@ -29,24 +30,26 @@ module Railjet
 
       def initialize_copy(original)
         super
-        @registry_module = nil
-        @repositories    = original.repositories.dup
+        
+        @initialized_repositories = original.initialized_repositories.dup
+        @repositories             = original.repositories.dup
+        @registry_module          = nil
       end
 
       def add_to_registry(name, repository, args = {})
-        @initialized_repositories[name] = nil
-        @repositories[name] = {
+        initialized_repositories[name] = nil
+        repositories[name] = {
           repository: repository,
           args:       args
         }
       end
 
       def get_from_registry(name)
-        @repositories[name]
+        repositories[name]
       end
 
       def initialize_repo(name)
-        @initialized_repositories[name] ||= begin
+        initialized_repositories[name] ||= begin
           repo  = get_from_registry(name)
           klass = repo[:repository]
           args  = repo[:args]
