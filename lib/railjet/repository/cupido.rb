@@ -22,6 +22,10 @@ module Railjet
 
       private
 
+      def for_person(person)
+        cupido.find.proxy(person.external_id)
+      end
+
       def cupido_class(obj)
         "Cupido::#{obj.class.name}".constantize
       end
