@@ -27,4 +27,20 @@ describe Railjet::Form do
       end
     end
   end
+  
+  describe "validates timeliness" do
+    class DummyFormWithDate
+      include Railjet::Form
+      
+      attribute :date, Date
+      
+      validates_date :date, on_or_before: :today
+    end
+    
+    let(:form) { DummyFormWithDate.new(date: Date.today) }
+    
+    it "is valid" do
+      expect(form.valid?).to be true
+    end
+  end
 end

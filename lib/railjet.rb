@@ -1,9 +1,10 @@
 require "railjet/version"
 
-require "active_support"
+require "active_support/concern"
 require "active_model"
 require "active_model/merge_errors"
 require "virtus"
+require "validates_timeliness"
 
 module Railjet
   Error             = Class.new(StandardError)
