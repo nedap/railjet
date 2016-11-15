@@ -36,6 +36,7 @@ require "railjet/util/form_helper"
 require "railjet/validator"
 require "railjet/form"
 require "railjet/policy"
+require "railjet/composed_policy"
 require "railjet/use_case"
 
 require "railjet/repository/registry"
