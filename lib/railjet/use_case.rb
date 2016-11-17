@@ -10,6 +10,14 @@ module Railjet
       @context = context
     end
 
+    def with_requirements_check(*args)
+      with_ability_check(*args) do
+        with_policy_check(*args) do
+          yield if block_given?
+        end
+      end
+    end
+
     def with_ability_check(*args)
       if check_ability!(*args)
         yield if block_given?
