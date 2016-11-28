@@ -9,6 +9,7 @@ require "validates_timeliness"
 module Railjet
   Error             = Class.new(StandardError)
   UnauthorizedError = Class.new(Error)
+  RecordNotFound    = Class.new(Error)
 
   class ValidationError < Error
     attr_reader :errors
