@@ -7,7 +7,7 @@ module Railjet
         attr_reader :registry, :record
       end
 
-      def initialize(registry, record)
+      def initialize(registry, record = nil)
         @registry = registry
         @record   = record
       end

@@ -12,8 +12,8 @@ module Railjet
       @registry = registry
       define_accessors(**kwargs)
 
-      initialize_record_repository if respond_to?(:record, true)
-      initialize_cupido_repository if respond_to?(:cupido, true)
+      initialize_record_repository if defined?(record_repository_class)
+      initialize_cupido_repository if defined?(cupido_repository_class)
     end
 
     private
@@ -30,19 +30,35 @@ module Railjet
     end
 
     def initialize_record_repository
-      if defined?(self.class::ActiveRecordRepository)
+      if respond_to?(:record, true)
         def self.record
-          @record ||= self.class::ActiveRecordRepository.new(registry, super)
+          @record ||= record_repository_class.new(registry, super)
+        end
+      else
+        def self.record
+          @record ||= record_repository_class.new(registry)
         end
       end
     end
 
+    def record_repository_class
+      self.class::ActiveRecordRepository
+    end
+
     def initialize_cupido_repository
-      if defined?(self.class::CupidoRepository)
+      if respond_to?(:cupido, true)
         def self.cupido
-          @cupido ||= self.class::CupidoRepository.new(registry, super)
+          @cupido ||= cupido_repository_class.new(registry, super)
+        end
+      else
+        def self.cupido
+          @cupido ||= cupido_repository_class.new(registry)
         end
       end
+    end
+
+    def cupido_repository_class
+      self.class::CupidoRepository
     end
   end
 end

@@ -7,7 +7,7 @@ module Railjet
         attr_reader :registry, :cupido
       end
 
-      def initialize(registry, cupido)
+      def initialize(registry, cupido = nil)
         @registry = registry
         @cupido   = cupido
       end
