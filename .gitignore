@@ -39,3 +39,6 @@ bower.json
 
 # Ignore Byebug command history file.
 .byebug_history
+
+# we don't need the gems in the repo
+*.gem
