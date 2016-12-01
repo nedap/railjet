@@ -1,5 +1,3 @@
-require "railjet/version"
-
 require "active_support"
 require "active_model"
 require "active_model/merge_errors"
