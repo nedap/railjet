@@ -1,13 +1,15 @@
 require "railjet/version"
 
-require "active_support"
+require "active_support/concern"
 require "active_model"
 require "active_model/merge_errors"
 require "virtus"
+require "validates_timeliness"
 
 module Railjet
   Error             = Class.new(StandardError)
   UnauthorizedError = Class.new(Error)
+  RecordNotFound    = Class.new(Error)
 
   class ValidationError < Error
     attr_reader :errors
@@ -35,6 +37,7 @@ require "railjet/util/form_helper"
 require "railjet/validator"
 require "railjet/form"
 require "railjet/policy"
+require "railjet/composed_policy"
 require "railjet/use_case"
 
 require "railjet/repository/registry"

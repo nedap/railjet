@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    railjet (2.0.0.pre)
+    railjet (0.9)
       activemodel (~> 4.2)
       activesupport (~> 4.2)
       validates_timeliness (~> 3.0.15)
@@ -92,4 +92,4 @@ DEPENDENCIES
   rspec (~> 3.0)
 
 BUNDLED WITH
-   1.13.5
+   1.13.6

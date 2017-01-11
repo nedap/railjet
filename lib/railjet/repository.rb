@@ -1,5 +1,5 @@
-require "railjet/repository/active_record_repository"
-require "railjet/repository/cupido_repository"
+require "railjet/repository/active_record"
+require "railjet/repository/cupido"
 
 module Railjet
   module Repository
@@ -8,22 +8,27 @@ module Railjet
     attr_reader :registry
     delegate    :settings, to: :registry
 
-    def initialize(registry, **kwargs)
+    attr_reader :record_dao, :cupido_dao
+
+    def initialize(registry, record: nil, cupido: nil)
       @registry = registry
-      define_accessors(**kwargs)
+      
+      @record_dao  = record
+      @cupido_dao  = cupido
     end
 
     private
 
-    def define_accessors(**kwargs)
-      kwargs.each do |name, val|
-        repository_module.send(:define_method, name) { val }
-        repository_module.send(:protected, name)
+    def record
+      if self.class.const_defined?("ActiveRecordRepository")
+        @record ||= self.class::ActiveRecordRepository.new(registry, record_dao)
       end
     end
 
-    def repository_module
-      @repository_module ||= Module.new.tap { |m| self.class.include(m) }
+    def cupido
+      if self.class.const_defined?("CupidoRepository")
+        @cupido ||= self.class::CupidoRepository.new(registry, cupido_dao)
+      end
     end
   end
 end
