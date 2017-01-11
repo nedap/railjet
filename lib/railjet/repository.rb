@@ -20,23 +20,15 @@ module Railjet
     private
 
     def record
-      if defined?(record_repo)
-        @record ||= record_repo.new(registry, record_dao)
+      if self.class.const_defined?("ActiveRecordRepository")
+        @record ||= self.class::ActiveRecordRepository.new(registry, record_dao)
       end
     end
 
     def cupido
-      if defined?(cupido_repo)
-        @cupido ||= cupido_repo.new(registry, cupido_dao)
+      if self.class.const_defined?("CupidoRepository")
+        @cupido ||= self.class::CupidoRepository.new(registry, cupido_dao)
       end
-    end
-
-    def record_repo
-      self.class::ActiveRecordRepository
-    end
-
-    def cupido_repo
-      self.class::CupidoRepository
     end
   end
 end

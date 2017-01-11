@@ -7,10 +7,22 @@ describe Railjet::Repository do
 
   class DummyOneRepository
     include Railjet::Repository
+
+    class CupidoRepository
+      include Railjet::Repository::Cupido
+    end
   end
 
   class DummyTwoRepository
     include Railjet::Repository
+
+    class CupidoRepository
+      include Railjet::Repository::Cupido
+    end
+
+    class ActiveRecordRepository
+      include Railjet::Repository::ActiveRecord
+    end
   end
 
   class AnotherDummyRepository
@@ -35,23 +47,33 @@ describe Railjet::Repository do
 
   describe "#new" do
     context "with one DAO" do
-      subject(:repo) { DummyOneRepository.new(registry, cupido: cupido) }
+      subject(:repo)    { DummyOneRepository.new(registry, cupido: cupido) }
+      let(:cupido_repo) { repo.send(:cupido) }
 
       it "creates single accessor" do
-        expect(repo.send(:cupido)).to eq cupido
+        expect(cupido_repo).to be_instance_of DummyOneRepository::CupidoRepository
+        expect(cupido_repo.cupido).to eq cupido
       end
 
       it "does not create another accessor" do
-        expect { repo.send(:record) }.to raise_exception(NoMethodError)
+        expect(repo.send(:record)).to be_nil
       end
     end
 
     context "with two DAO" do
       subject(:repo) { DummyTwoRepository.new(registry, record: record, cupido: cupido) }
 
-      it "creates private accessors" do
-        expect(repo.send(:record)).to eq record
-        expect(repo.send(:cupido)).to eq cupido
+      let(:record_repo) { repo.send(:record) }
+      let(:cupido_repo) { repo.send(:cupido) }
+
+      it "creates accessor for record" do
+        expect(record_repo).to be_instance_of DummyTwoRepository::ActiveRecordRepository
+        expect(record_repo.record).to eq record
+      end
+
+      it "creates accessor for cupido" do
+        expect(cupido_repo).to be_instance_of DummyTwoRepository::CupidoRepository
+        expect(cupido_repo.cupido).to eq cupido
       end
     end
 
