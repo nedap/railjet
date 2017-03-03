@@ -5,6 +5,7 @@ require "active_model"
 require "active_model/merge_errors"
 require "virtus"
 require "validates_timeliness"
+require "sidekiq-bus"
 
 module Railjet
   Error             = Class.new(StandardError)
@@ -48,3 +49,8 @@ require "railjet/repository/registry"
 require "railjet/repository"
 require "railjet/repository/active_record"
 require "railjet/repository/redis"
+
+require "railjet/event_bus"
+Railjet::EventBus.adapter = QueueBus
+
+require "railjet/railtie" if defined?(Rails)
