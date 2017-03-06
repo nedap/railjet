@@ -19,7 +19,7 @@ describe Railjet::EventBus do
 
       expect(received).to be false
 
-      bus.publish("dummy_created", id: 1)
+      bus.publish("dummy_created")
 
       expect(received).to be true
     end
@@ -34,10 +34,10 @@ describe Railjet::EventBus do
       bus.publish("dummy_created", id: 1)
 
       expect(received_attrs).to include "id"
-      expect(received_attrs.length).to eq 11
+      expect(received_attrs.length).to eq 1
     end
 
-    it "splits block argument into attrs and bus payload" do
+    it "passes in bus payload" do
       received_attrs   = nil
       received_payload = nil
 

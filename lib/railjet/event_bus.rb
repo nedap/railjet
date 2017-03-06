@@ -33,8 +33,11 @@ module Railjet
       end
 
       def call(attributes)
-        return super unless subscriber.arity == 2
-        subscriber.call(attrs(attributes), payload(attributes))
+        case subscriber.arity
+        when 1 then subscriber.call(attrs(attributes))
+        when 2 then subscriber.call(attrs(attributes), payload(attributes))
+        else super
+        end
       end
 
       private
