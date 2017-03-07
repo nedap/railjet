@@ -1,55 +1,48 @@
+require "sidekiq/testing"
 require "railjet/event_bus"
 
 describe Railjet::EventBus do
-  before :all do
-    described_class.run_inline!
+  around(:each) do |example|
+    Wisper.clear
+
+    Sidekiq::Testing.inline! do
+      example.run
+    end
+  end
+
+  class DummyPublisher
+    include Railjet::Publisher
+
+    def self.call(*args)
+      new.call(*args)
+    end
+
+    def call(*args)
+      publish(:dummy_created, *args)
+    end
+  end
+
+  class DummySubscriber
+    def self.on_dummy_created(*args)
+      # mocked
+    end
   end
 
   describe "pub/sub" do
-    subject(:bus) { described_class.new("dummy") }
+    subject(:bus) { described_class.new }
+
+    before do
+      bus.subscribe :dummy_created, DummySubscriber
+    end
 
     it "fires up subscriber when event is published" do
-      received = false
-
-      bus.subscribe "dummy_created" do
-        received = true
-      end
-
-
-
-      expect(received).to be false
-
-      bus.publish("dummy_created")
-
-      expect(received).to be true
+      expect(DummySubscriber).to receive(:on_dummy_created)
+      DummyPublisher.call
     end
 
     it "passes in given attributes" do
-      received_attrs = nil
-
-      bus.subscribe "dummy_created" do |attrs|
-        received_attrs = attrs
-      end
-
-      bus.publish("dummy_created", id: 1)
-
-      expect(received_attrs).to include "id"
-      expect(received_attrs.length).to eq 1
-    end
-
-    it "passes in bus payload" do
-      received_attrs   = nil
-      received_payload = nil
-
-      bus.subscribe "dummy_created" do |attrs, payload|
-        received_attrs   = attrs
-        received_payload = payload
-      end
-
-      bus.publish("dummy_created", id: 1)
-
-      expect(received_attrs.length).to eq 1
-      expect(received_payload.length).to eq 10
+      expect(DummySubscriber).to receive(:on_dummy_created).with(id: 1)
+      DummyPublisher.call(id: 1)
     end
   end
 end

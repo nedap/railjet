@@ -1,66 +1,27 @@
 module Railjet
+  module Publisher
+    def self.included(klass)
+      raise "Railjet::EventBus adapter must be specified" unless Railjet::EventBus.adapter
+      klass.__send__(:include, Railjet::EventBus.publisher)
+    end
+  end
+
   class EventBus
     class << self
       attr_accessor :adapter
-
-      def run_inline!
-        adapter.local_mode = :inline
-      end
+      delegate :publisher, to: :adapter
     end
 
-    def initialize(queue, adapter: self.class.adapter)
-      @bus        = adapter or raise ArgumentError, "Railjet::EventBus adapter must be specified"
-      @dispatcher = adapter.dispatch(queue) { }
+    def initialize(adapter: self.class.adapter)
+      @bus = adapter or raise ArgumentError, "Railjet::EventBus adapter must be specified"
     end
 
-    def publish(event, attrs = {})
-      bus.publish(event, attrs)
-    end
-
-    def subscribe(event, &block)
-      dispatcher.instance_eval do
-        subscribe(event, &ProcSubscriber.new(&block))
-      end
+    def subscribe(event, subscriber)
+      bus.subscribe(subscriber, on: event, prefix: true)
     end
 
     private
 
-    attr_reader :bus, :dispatcher
-
-    class ProcSubscriber < Proc
-      def initialize(&subscriber)
-        @subscriber = subscriber
-      end
-
-      def call(attributes)
-        case subscriber.arity
-        when 1 then subscriber.call(attrs(attributes))
-        when 2 then subscriber.call(attrs(attributes), payload(attributes))
-        else super
-        end
-      end
-
-      private
-
-      def payload(attributes)
-        payload = attributes.select(&method(:bus_payload?))
-        payload = payload.with_indifferent_access if payload.respond_to?(:with_indifferent_access)
-
-        payload
-      end
-
-      def attrs(attributes)
-        attrs = attributes.reject(&method(:bus_payload?))
-        attrs = attrs.with_indifferent_access if attrs.respond_to?(:with_indifferent_access)
-
-        attrs
-      end
-
-      def bus_payload?(k, v)
-        k =~ /bus_/
-      end
-
-      attr_reader :subscriber
-    end
+    attr_reader :bus
   end
 end

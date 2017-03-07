@@ -4,9 +4,9 @@ PATH
     railjet (2.0.pre2)
       activemodel (> 4)
       activesupport (> 4)
-      sidekiq-bus (~> 0.5.7)
       validates_timeliness (~> 4.0.2)
       virtus (~> 1.0.2)
+      wisper-sidekiq (~> 0.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -51,9 +51,6 @@ GEM
     pry (0.11.1)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
-    queue-bus (0.5.7)
-      multi_json
-      redis
     rack (2.0.1)
     rack-protection (1.5.3)
       rack
@@ -79,9 +76,6 @@ GEM
       connection_pool (~> 2.2, >= 2.2.0)
       rack-protection (>= 1.5.0)
       redis (~> 3.2, >= 3.2.1)
-    sidekiq-bus (0.5.7)
-      queue-bus (= 0.5.7)
-      sidekiq (>= 3.0.0, < 5.0)
     thor (0.20.0)
     thread_safe (0.3.6)
     timeliness (0.3.8)
@@ -94,6 +88,10 @@ GEM
       coercible (~> 1.0)
       descendants_tracker (~> 0.0, >= 0.0.3)
       equalizer (~> 0.0, >= 0.0.9)
+    wisper (2.0.0)
+    wisper-sidekiq (0.0.1)
+      sidekiq
+      wisper
 
 PLATFORMS
   ruby
