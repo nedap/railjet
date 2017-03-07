@@ -13,6 +13,10 @@ module Railjet
     def self.included(klass)
       raise "Railjet::EventBus adapter must be specified" unless Railjet::EventBus.adapter
       klass.__send__(:include, Railjet::EventBus.publisher)
+
+      klass.redefine_method :subscribe do |event, subscriber|
+        super(subscriber, on: event, prefix: true)
+      end
     end
   end
 

@@ -28,7 +28,7 @@ describe Railjet::EventBus do
     end
   end
 
-  describe "pub/sub" do
+  describe "async pub/sub" do
     subject(:bus) { described_class.new }
 
     before do
@@ -43,6 +43,17 @@ describe Railjet::EventBus do
     it "passes in given attributes" do
       expect(DummySubscriber).to receive(:on_dummy_created).with(id: 1)
       DummyPublisher.call(id: 1)
+    end
+  end
+
+  describe "sync pub/sub" do
+    subject(:publisher) { DummyPublisher.new }
+
+    it "fires up subscriber when event is publisher" do
+      publisher.subscribe(:dummy_created, DummySubscriber)
+      expect(DummySubscriber).to receive(:on_dummy_created)
+
+      publisher.call
     end
   end
 end
