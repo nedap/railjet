@@ -1,3 +1,13 @@
+
+# TODO remove when fixed in wisper
+module Wisper
+  class Configuration
+    class Broadcasters
+      def_delegators :@data, :to_h, :keys
+    end
+  end
+end
+
 module Railjet
   module Publisher
     def self.included(klass)
@@ -23,5 +33,24 @@ module Railjet
     private
 
     attr_reader :bus
+
+    module Testing
+      require "wisper/testing"
+
+      class << self
+        delegate :adapter, to: EventBus
+        delegate :clear,   to: :adapter
+      end
+
+      def self.inline!(&block)
+        testing.inline!
+        block.call
+        testing.restore!
+      end
+
+      def self.testing
+        adapter::Testing
+      end
+    end
   end
 end

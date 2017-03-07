@@ -3,9 +3,9 @@ require "railjet/event_bus"
 
 describe Railjet::EventBus do
   around(:each) do |example|
-    Wisper.clear
+    Railjet::EventBus::Testing.clear
 
-    Sidekiq::Testing.inline! do
+    Railjet::EventBus::Testing.inline! do
       example.run
     end
   end
