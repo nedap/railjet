@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/krisleech/wisper-testing.git
+  revision: 257a293fcc16baae27990fc26490a27298d9badf
+  ref: 257a293
+  specs:
+    wisper-testing (0.1.0)
+
 PATH
   remote: .
   specs:
@@ -89,6 +96,7 @@ GEM
       descendants_tracker (~> 0.0, >= 0.0.3)
       equalizer (~> 0.0, >= 0.0.9)
     wisper (2.0.0)
+    wisper-rspec (0.0.3)
     wisper-sidekiq (0.0.1)
       sidekiq
       wisper
@@ -104,6 +112,8 @@ DEPENDENCIES
   rake (~> 11.0)
   rake-version (~> 1.0)
   rspec (~> 3.0)
+  wisper-rspec (~> 0.0.2)
+  wisper-testing!
 
 BUNDLED WITH
    1.14.5

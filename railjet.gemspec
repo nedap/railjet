@@ -25,6 +25,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry"
   spec.add_development_dependency "gemfury"
   spec.add_development_dependency "rake-version",         "~> 1.0"
+  spec.add_development_dependency "wisper-testing",       "~> 0.1.0"
+  spec.add_development_dependency "wisper-rspec",         "~> 0.0.2"
 
   spec.add_dependency             "activesupport",        '> 4'
   spec.add_dependency             "activemodel",          '> 4'
