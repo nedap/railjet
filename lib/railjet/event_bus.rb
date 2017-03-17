@@ -35,7 +35,7 @@ module Railjet
     end
 
     def subscribe(event, subscriber)
-      bus.subscribe(subscriber, on: event, prefix: true)
+      bus.subscribe(subscriber, on: event, prefix: true, async: true)
     end
 
     private
