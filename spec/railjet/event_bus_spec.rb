@@ -5,7 +5,7 @@ describe Railjet::EventBus do
   around(:each) do |example|
     Railjet::EventBus::Testing.clear
 
-    Railjet::EventBus::Testing.inline! do
+    Railjet::EventBus::Testing.inline do
       example.run
     end
   end

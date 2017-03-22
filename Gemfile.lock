@@ -1,9 +1,11 @@
 GIT
-  remote: https://github.com/krisleech/wisper-testing.git
-  revision: 257a293fcc16baae27990fc26490a27298d9badf
-  ref: 257a293
+  remote: https://github.com/zlw/wisper-testing.git
+  revision: bf977484a3abca01b7d22a81ed855ad1f7851740
+  ref: bf97748
+  branch: blk_inline
   specs:
     wisper-testing (0.1.0)
+      wisper (~> 2.0)
 
 PATH
   remote: .

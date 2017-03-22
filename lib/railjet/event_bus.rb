@@ -38,16 +38,11 @@ module Railjet
       class << self
         delegate :adapter, to: EventBus
         delegate :clear,   to: :adapter
-      end
+        delegate :inline,  to: :testing
 
-      def self.inline!(&block)
-        testing.inline!
-        block.call
-        testing.restore!
-      end
-
-      def self.testing
-        adapter::Testing
+        def testing
+          adapter::Testing
+        end
       end
     end
   end
