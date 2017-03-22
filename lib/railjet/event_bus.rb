@@ -1,13 +1,3 @@
-
-# TODO remove when fixed in wisper
-module Wisper
-  class Configuration
-    class Broadcasters
-      def_delegators :@data, :to_h, :keys
-    end
-  end
-end
-
 module Railjet
   module Publisher
     def self.included(klass)
