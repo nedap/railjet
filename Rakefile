@@ -13,8 +13,5 @@ RakeVersion::Tasks.new do |v|
   v.copy 'lib/railjet/version.rb'
 end
 
-# Gemfury rake tasks
-require 'gemfury/tasks'
-
-Gemfury.account = "nedap-healthcare"
-task :release => 'fury:release'
+# Rubygems rake tasks
+require "bundler/gem_tasks"
