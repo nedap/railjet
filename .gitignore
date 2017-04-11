@@ -41,4 +41,4 @@ bower.json
 .byebug_history
 
 # we don't need the gems in the repo
-*.gem
+/pkg/*.gem
