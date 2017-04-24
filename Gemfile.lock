@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/zlw/wisper-testing.git
-  revision: bf977484a3abca01b7d22a81ed855ad1f7851740
-  ref: bf97748
-  branch: blk_inline
+  revision: 2bfd8aa6b8da2df9dce1eab990590fb3de40968c
+  ref: 2bfd8aa
+  branch: inline_order_fix
   specs:
     wisper-testing (0.1.0)
       wisper (~> 2.0)
