@@ -3,6 +3,8 @@ require_relative "generic"
 module Railjet
   module Repository
     class Cupido < Generic
+      self.type = :cupido
+
       def build(args = {})
         cupido.new(args)
       end

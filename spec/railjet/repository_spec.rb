@@ -8,22 +8,22 @@ describe Railjet::Repository do
   DummyRedis  = Class.new
 
   class DummyOneRepository
-    include Railjet::Repository::Cupido[cupido: 'DummyCupido']
+    include Railjet::Repository::Cupido['DummyCupido']
   end
 
   class DummyTwoRepository
     include Railjet::Repository
 
     class CupidoRepository
-      include Railjet::Repository::Cupido[cupido: 'DummyCupido']
+      include Railjet::Repository::Cupido['DummyCupido']
     end
 
     class ActiveRecordRepository
-      include Railjet::Repository::ActiveRecord[record: 'DummyRecord']
+      include Railjet::Repository::ActiveRecord['DummyRecord']
     end
 
     class RedisRepository
-      include Railjet::Repository::Redis[redis: 'DummyRedis']
+      include Railjet::Repository::Redis['DummyRedis']
     end
   end
 

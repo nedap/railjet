@@ -3,6 +3,8 @@ require_relative "generic"
 module Railjet
   module Repository
     class Redis < Generic
+      self.type = :redis
+
       def get(key)
         redis.get(key)
       end

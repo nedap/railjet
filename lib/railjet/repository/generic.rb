@@ -1,13 +1,21 @@
 module Railjet
   module Repository
     class Generic < Module
-      def self.[](**kwargs)
-        type, dao = kwargs.first
-        new(type, dao)
+      class << self
+        def [](dao)
+          new(dao)
+        end
+
+        attr_accessor :type
       end
 
-      def initialize(type, dao)
-        @type, @dao = type, dao
+      def self.[](dao)
+        new(dao)
+      end
+
+      def initialize(dao)
+        @dao  = dao
+        @type = self.class.type
       end
 
       def included(klass)

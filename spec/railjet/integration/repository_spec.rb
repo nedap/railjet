@@ -21,7 +21,7 @@ describe "Repository & Registry" do
     delegate :persist,        to: :cupido
 
     class ActiveRecordRepository
-      include Railjet::Repository::ActiveRecord[record: 'DummyUserRecord']
+      include Railjet::Repository::ActiveRecord['DummyUserRecord']
 
       def all_with_tasks
         record.all.map do |user|
@@ -32,7 +32,7 @@ describe "Repository & Registry" do
     end
 
     class CupidoRepository
-      include Railjet::Repository::Cupido[cupido: 'DummyUserCupido']
+      include Railjet::Repository::Cupido['DummyUserCupido']
 
       def persist(user)
         if registry.respond_to?(:settings) && registry.settings.call_cupido
@@ -43,7 +43,7 @@ describe "Repository & Registry" do
   end
 
   class DummyTaskRepository
-    include Railjet::Repository::ActiveRecord[record: 'DummyTaskRecord']
+    include Railjet::Repository::ActiveRecord['DummyTaskRecord']
 
     def find_for_user(user)
       record.where(user_id: user.id)

@@ -3,6 +3,8 @@ require_relative "generic"
 module Railjet
   module Repository
     class ActiveRecord < Generic
+      self.type = :record
+      
       def all
         record.all
       end
