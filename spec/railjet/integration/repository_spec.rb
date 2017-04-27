@@ -21,7 +21,7 @@ describe "Repository & Registry" do
     delegate :persist,        to: :cupido
 
     class ActiveRecordRepository
-      include Railjet::Repository::ActiveRecord
+      include Railjet::Repository::ActiveRecord[record: 'DummyUserRecord']
 
       def all_with_tasks
         record.all.map do |user|
@@ -32,7 +32,7 @@ describe "Repository & Registry" do
     end
 
     class CupidoRepository
-      include Railjet::Repository::Cupido
+      include Railjet::Repository::Cupido[cupido: 'DummyUserCupido']
 
       def persist(user)
         if registry.respond_to?(:settings) && registry.settings.call_cupido
@@ -43,22 +43,16 @@ describe "Repository & Registry" do
   end
 
   class DummyTaskRepository
-    include Railjet::Repository
+    include Railjet::Repository::ActiveRecord[record: 'DummyTaskRecord']
 
-    delegate :find_for_user, to: :record
-
-    class ActiveRecordRepository
-      include Railjet::Repository::ActiveRecord
-
-      def find_for_user(user)
-        record.where(user_id: user.id)
-      end
+    def find_for_user(user)
+      record.where(user_id: user.id)
     end
   end
 
   before do
-    registry.register(:user, DummyUserRepository, record: DummyUserRecord, cupido: DummyUserCupido)
-    registry.register(:task, DummyTaskRepository, record: DummyTaskRecord)
+    registry.register(:user, DummyUserRepository)
+    registry.register(:task, DummyTaskRepository)
   end
 
   describe "calling another repo" do
