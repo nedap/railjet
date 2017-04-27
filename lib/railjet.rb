@@ -44,5 +44,6 @@ require "railjet/repository/registry"
 require "railjet/repository"
 require "railjet/repository/active_record"
 require "railjet/repository/cupido"
+require "railjet/repository/redis"
 
 require "railjet/railtie" if defined?(Rails)

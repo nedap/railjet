@@ -3,11 +3,9 @@ require "railjet/repository"
 describe Railjet::Repository do
   let(:registry) { double }
 
-  class DummyRecord
-  end
-
-  class DummyCupido
-  end
+  DummyRecord = Class.new
+  DummyCupido = Class.new
+  DummyRedis  = Class.new
 
   class DummyOneRepository
     include Railjet::Repository::Cupido[cupido: 'DummyCupido']
@@ -23,6 +21,10 @@ describe Railjet::Repository do
     class ActiveRecordRepository
       include Railjet::Repository::ActiveRecord[record: 'DummyRecord']
     end
+
+    class RedisRepository
+      include Railjet::Repository::Redis[redis: 'DummyRedis']
+    end
   end
 
   describe "#new" do
@@ -35,11 +37,12 @@ describe Railjet::Repository do
       end
     end
 
-    context "with two DAO" do
+    context "with multiple DAO" do
       subject(:repo) { DummyTwoRepository.new(registry) }
 
       let(:record_repo) { repo.send(:record) }
       let(:cupido_repo) { repo.send(:cupido) }
+      let(:redis_repo)  { repo.send(:redis)  }
 
       it "creates accessor for record" do
         expect(record_repo).to be_instance_of DummyTwoRepository::ActiveRecordRepository
@@ -49,6 +52,11 @@ describe Railjet::Repository do
       it "creates accessor for cupido" do
         expect(cupido_repo).to be_instance_of DummyTwoRepository::CupidoRepository
         expect(cupido_repo.cupido).to eq DummyCupido
+      end
+
+      it "creates accessor for redis" do
+        expect(redis_repo).to be_instance_of DummyTwoRepository::RedisRepository
+        expect(redis_repo.redis).to eq DummyRedis
       end
     end
   end
