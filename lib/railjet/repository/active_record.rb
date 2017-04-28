@@ -1,17 +1,10 @@
+require_relative "generic"
+
 module Railjet
   module Repository
-    module ActiveRecord
-      extend ::ActiveSupport::Concern
-
-      included do
-        attr_reader :registry, :record
-      end
-
-      def initialize(registry, record = nil)
-        @registry = registry
-        @record   = record
-      end
-
+    class ActiveRecord < Generic
+      self.type = :record
+      
       def all
         record.all
       end

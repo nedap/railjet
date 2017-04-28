@@ -1,34 +1,38 @@
-require "railjet/repository/active_record"
-require "railjet/repository/cupido"
-
 module Railjet
   module Repository
-    extend  ::ActiveSupport::Concern
-
     attr_reader :registry
     delegate    :settings, to: :registry
 
-    attr_reader :record_dao, :cupido_dao
-
-    def initialize(registry, record: nil, cupido: nil)
+    def initialize(registry)
       @registry = registry
-      
-      @record_dao  = record
-      @cupido_dao  = cupido
+      initialize_specific_repositories
     end
 
     private
 
-    def record
-      if self.class.const_defined?("ActiveRecordRepository")
-        @record ||= self.class::ActiveRecordRepository.new(registry, record_dao)
+    def repositories
+      klass = self.class
+
+      klass.constants.select do |k|
+        name = klass.const_get(k).name
+        name.end_with?("Repository")
+      end.map do |k|
+        klass.const_get(k)
       end
     end
 
-    def cupido
-      if self.class.const_defined?("CupidoRepository")
-        @cupido ||= self.class::CupidoRepository.new(registry, cupido_dao)
+    def initialize_specific_repositories
+      repositories.each do |repo|
+        initialize_repository(repo)
       end
+    end
+
+    private
+
+    def initialize_repository(repository)
+      ivar = "@#{repository.type}"
+      instance_variable_set(ivar, repository.new(registry))
+      self.class.send :attr_reader, repository.type
     end
   end
 end

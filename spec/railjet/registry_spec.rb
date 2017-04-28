@@ -3,16 +3,13 @@ require "railjet/repository/registry"
 describe Railjet::Repository::Registry do
   let(:app_registry) { Class.new(described_class).new }
 
-  let(:query)  { double('UserRecord') }
-  let(:cupido) { double('Cupido::User') }
-
   class DummyRepository
     def initialize(registry, **kwargs)
     end
   end
 
   before do
-    app_registry.register(:user, DummyRepository, query: query, cupido: cupido)
+    app_registry.register(:user, DummyRepository)
   end
 
   describe "#register" do
@@ -21,7 +18,7 @@ describe Railjet::Repository::Registry do
     end
 
     it "initializes repository with given models" do
-      expect(DummyRepository).to receive(:new).with(app_registry, query: query, cupido: cupido)
+      expect(DummyRepository).to receive(:new).with(app_registry)
       app_registry.users
     end
   end

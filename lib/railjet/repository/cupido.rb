@@ -1,16 +1,9 @@
+require_relative "generic"
+
 module Railjet
   module Repository
-    module Cupido
-      extend ::ActiveSupport::Concern
-
-      included do
-        attr_reader :registry, :cupido
-      end
-
-      def initialize(registry, cupido = nil)
-        @registry = registry
-        @cupido   = cupido
-      end
+    class Cupido < Generic
+      self.type = :cupido
 
       def build(args = {})
         cupido.new(args)

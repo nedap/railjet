@@ -9,8 +9,8 @@ module Railjet
         @initialized_repositories = {}
       end
 
-      def register(name, repository, **kwargs)
-        add_to_registry(name, repository, kwargs)
+      def register(name, repository)
+        add_to_registry(name, repository)
         define_accessor(name)
       end
 
@@ -36,12 +36,9 @@ module Railjet
         @registry_module          = nil
       end
 
-      def add_to_registry(name, repository, args = {})
+      def add_to_registry(name, repository)
         initialized_repositories[name] = nil
-        repositories[name] = {
-          repository: repository,
-          args:       args
-        }
+        repositories[name]             = repository
       end
 
       def get_from_registry(name)
@@ -49,13 +46,7 @@ module Railjet
       end
 
       def initialize_repo(name)
-        initialized_repositories[name] ||= begin
-          repo  = get_from_registry(name)
-          klass = repo[:repository]
-          args  = repo[:args]
-
-          klass.new(self, **args)
-        end
+        initialized_repositories[name] ||= get_from_registry(name).new(self)
       end
 
       def define_accessor(name)
