@@ -8,7 +8,7 @@ describe "Repository & Registry" do
     attr_accessor :tasks
   end
 
-  class DummyUserCupido
+  class DummyUserNamespace
   end
 
   class DummyTaskRecord < Struct.new(:id)
@@ -18,7 +18,7 @@ describe "Repository & Registry" do
     include Railjet::Repository
 
     delegate :all_with_tasks, to: :record
-    delegate :persist,        to: :cupido
+    delegate :persist,        to: :redis
 
     class ActiveRecordRepository
       include Railjet::Repository::ActiveRecord['DummyUserRecord']
@@ -31,12 +31,12 @@ describe "Repository & Registry" do
       end
     end
 
-    class CupidoRepository
-      include Railjet::Repository::Cupido['DummyUserCupido']
+    class RedisRepository
+      include Railjet::Repository::Redis['DummyUserNamespace']
 
       def persist(user)
-        if registry.respond_to?(:settings) && registry.settings.call_cupido
-          cupido.push(user)
+        if registry.respond_to?(:settings) && registry.settings.call_redis
+          redis.set("user", user)
         end
       end
     end
@@ -78,13 +78,13 @@ describe "Repository & Registry" do
   end
 
   describe "creating per-request copy" do
-    let(:settings)     { double(call_cupido: true) }
+    let(:settings)     { double(call_redis: true) }
     let(:new_registry) { registry.new(settings: settings) }
 
     let(:user) { DummyUserRecord.new(1) }
 
     it "adds per-request accessors" do
-      expect(DummyUserCupido).to receive(:push).with(user)
+      expect(DummyUserNamespace).to receive(:set).with("user", user)
       new_registry.users.persist(user)
     end
 
