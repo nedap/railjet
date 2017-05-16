@@ -3,15 +3,15 @@ module Railjet
     extend  ::ActiveSupport::Concern
     include Railjet::Validator
 
-    attr_reader :context, :object
+    included do
+      const_set(:Error, Class.new(Railjet::PolicyError))
+    end
 
     def initialize(context, object)
       @context, @object = context, object
     end
-
-    def validate!
-      valid? || (raise Railjet::PolicyError.new(errors) )
-    end
+    
+    attr_reader :context, :object
 
     module ClassMethods
       def context(*context_members)

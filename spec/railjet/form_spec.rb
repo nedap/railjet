@@ -25,6 +25,10 @@ describe Railjet::Form do
           expect(e.errors["name"]).to include /can't be blank/
         end
       end
+
+      it "raises custom exception" do
+        expect { form.validate! }.to raise_exception(DummyForm::Error)
+      end
     end
   end
   

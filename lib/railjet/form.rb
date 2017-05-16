@@ -3,8 +3,8 @@ module Railjet
     extend  ::ActiveSupport::Concern
     include Railjet::Validator
 
-    def validate!
-      valid? || (raise Railjet::FormError.new(errors) )
+    included do
+      const_set(:Error, Class.new(Railjet::FormError))
     end
   end
 end

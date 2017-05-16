@@ -21,6 +21,10 @@ module Railjet
     def error_messages
       errors.try(:messages)
     end
+
+    def to_s
+      error_messages
+    end
   end
 
   FormError   = Class.new(ValidationError)
