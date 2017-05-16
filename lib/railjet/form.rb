@@ -6,9 +6,5 @@ module Railjet
     included do
       const_set(:Error, Class.new(Railjet::FormError))
     end
-
-    def validate!
-      valid? || (raise self.class::Error.new(errors))
-    end
   end
 end

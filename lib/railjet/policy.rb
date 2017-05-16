@@ -7,16 +7,11 @@ module Railjet
       const_set(:Error, Class.new(Railjet::PolicyError))
     end
 
-
-    attr_reader :context, :object
-
     def initialize(context, object)
       @context, @object = context, object
     end
-
-    def validate!
-      valid? || (raise self.class::Error.new(errors))
-    end
+    
+    attr_reader :context, :object
 
     module ClassMethods
       def context(*context_members)

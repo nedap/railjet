@@ -9,7 +9,7 @@ module Railjet
     end
 
     def validate!
-      raise NotImplementedError
+      valid? || (raise self.class::Error.new(errors))
     end
   end
 end
