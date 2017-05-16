@@ -35,7 +35,6 @@ describe Railjet::Policy do
 
     it "raises custom exception" do
       expect { policy.validate! }.to raise_exception(DummyBeforeDeadlinePolicy::Error)
-      binding.pry
     end
   end
 
