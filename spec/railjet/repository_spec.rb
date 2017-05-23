@@ -49,4 +49,12 @@ describe Railjet::Repository do
       end
     end
   end
+  
+  describe "initialized repo" do
+    subject(:repo) { DummyOneRepository.new(registry) }
+    
+    it "responds to methods from included repo" do
+      expect(repo).to respond_to :persist
+    end
+  end
 end
