@@ -5,24 +5,26 @@ module Railjet
     class Redis < Generic
       self.type = :redis
 
-      def get(key)
-        redis.get(key)
-      end
+      module RepositoryMethods
+        def get(key)
+          redis.get(key)
+        end
 
-      def set(key, val)
-        redis.set(key, val)
-      end
+        def set(key, val)
+          redis.set(key, val)
+        end
 
-      def exists?(key)
-        redis.exists(key)
-      end
+        def exists?(key)
+          redis.exists(key)
+        end
 
-      def transaction(&block)
-        redis.multi(&block)
-      end
+        def transaction(&block)
+          redis.multi(&block)
+        end
 
-      def pipeline(&block)
-        redis.pipelined(&block)
+        def pipeline(&block)
+          redis.pipelined(&block)
+        end
       end
     end
   end

@@ -9,10 +9,6 @@ module Railjet
         attr_accessor :type
       end
 
-      def self.[](dao)
-        new(dao)
-      end
-
       def initialize(dao)
         @dao  = dao
         @type = self.class.type
@@ -22,6 +18,8 @@ module Railjet
         define_dao_accessor(@type, @dao)
         define_type_accessor(klass, @type)
         define_initializer(klass)
+
+        klass.send :include, self.class::RepositoryMethods
       end
 
       private
