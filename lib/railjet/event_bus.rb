@@ -33,7 +33,11 @@ module Railjet
     attr_reader :bus
 
     module Testing
-      require "wisper/testing"
+      begin
+        require "wisper/testing"
+      rescue LoadError
+        # It's not there in staging and production env
+      end
 
       class << self
         delegate :adapter, to: EventBus
