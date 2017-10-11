@@ -11,12 +11,11 @@ module Railjet
     private
 
     def repositories
-      klass = self.class
-
-      klass.constants.select do |k|
-        name = klass.const_get(k).name
-        name.end_with?("Repository")
-      end.map do |k|
+      klass         = self.class
+      inner_klasses = klass.constants
+      inner_repos   = inner_klasses.select { |k| k.to_s.end_with?("Repository") }
+      
+      inner_repos.map do |k|
         klass.const_get(k)
       end
     end
