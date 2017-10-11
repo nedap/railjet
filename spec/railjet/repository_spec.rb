@@ -22,10 +22,13 @@ describe Railjet::Repository do
     end
   end
 
+  let(:record_repo) { repo.send(:record) }
+  let(:cupido_repo) { repo.send(:cupido) }
+  let(:redis_repo)  { repo.send(:redis)  }
+
   describe "#new" do
     context "with one DAO" do
       subject(:repo)    { DummyOneRepository.new(registry) }
-      let(:record_repo) { repo.send(:record) }
 
       it "creates accessor for DAO" do
         expect(repo.record).to be DummyRecord
@@ -34,9 +37,6 @@ describe Railjet::Repository do
 
     context "with multiple DAO" do
       subject(:repo) { DummyTwoRepository.new(registry) }
-
-      let(:record_repo) { repo.send(:record) }
-      let(:redis_repo)  { repo.send(:redis)  }
 
       it "creates accessor for record" do
         expect(record_repo).to be_instance_of DummyTwoRepository::ActiveRecordRepository
@@ -55,6 +55,23 @@ describe Railjet::Repository do
     
     it "responds to methods from included repo" do
       expect(repo).to respond_to :persist
+    end
+  end
+
+  describe "overriding default DAO" do
+    let(:record_dao) { double }
+    let(:redis_dao)  { double }
+
+    subject(:repo) { DummyTwoRepository.new(registry, record: record_dao, redis: redis_dao) }
+
+    it "changes record DAO" do
+      expect(record_repo).to be_instance_of DummyTwoRepository::ActiveRecordRepository
+      expect(record_repo.record).to eq record_dao
+    end
+
+    it "changes redis DAO" do
+      expect(redis_repo).to be_instance_of DummyTwoRepository::RedisRepository
+      expect(redis_repo.redis).to eq redis_dao
     end
   end
 end

@@ -3,9 +3,9 @@ module Railjet
     attr_reader :registry
     delegate    :settings, to: :registry
 
-    def initialize(registry)
+    def initialize(registry, **kwargs)
       @registry = registry
-      initialize_specific_repositories
+      initialize_specific_repositories(**kwargs)
     end
 
     private
@@ -20,17 +20,19 @@ module Railjet
       end
     end
 
-    def initialize_specific_repositories
+    def initialize_specific_repositories(**kwargs)
       repositories.each do |repo|
-        initialize_repository(repo)
+        initialize_repository(repo, **kwargs)
       end
     end
 
     private
 
-    def initialize_repository(repository)
+    def initialize_repository(repository, **kwargs)
       ivar = "@#{repository.type}"
-      instance_variable_set(ivar, repository.new(registry))
+      dao  = kwargs[repository.type]
+
+      instance_variable_set(ivar, repository.new(registry, dao: dao))
       self.class.send :attr_reader, repository.type
     end
   end
