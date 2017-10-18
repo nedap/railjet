@@ -2,7 +2,7 @@ module Railjet
   module Repository
     class Generic < Module
       class << self
-        def [](dao)
+        def [](dao = nil)
           new(dao)
         end
 
@@ -18,15 +18,14 @@ module Railjet
         define_dao_accessor(@type, @dao)
         define_type_accessor(klass, @type)
         define_initializer(klass)
-
-        klass.send :include, self.class::RepositoryMethods
+        include_repository_methods(klass)
       end
 
       private
 
       def define_dao_accessor(type, dao)
         define_method type do
-          @dao ||= dao.constantize
+          @dao ||= dao.constantize if dao.respond_to?(:constantize)
         end
       end
 
@@ -43,7 +42,19 @@ module Railjet
           def initialize(registry, dao: nil)
             @registry = registry
             @dao      = dao
+
+            # Let's check if DAO was set through registry
+            if dao.nil?
+              # Nope. Maybe it was set when including inner repo mixin
+              send(self.class.type) || raise(ArgumentError, "Your repository #{self.class} need a DAO. It can be set with inner-repo mixin  or through registry with `#{self.class.type}:` option")
+            end            
           end
+        end
+      end
+      
+      def include_repository_methods(klass)
+        if defined?(self.class::RepositoryMethods)
+          klass.send :include, self.class::RepositoryMethods
         end
       end
     end

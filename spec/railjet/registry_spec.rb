@@ -18,8 +18,21 @@ describe Railjet::Repository::Registry do
     end
 
     it "initializes repository with given models" do
-      expect(DummyRepository).to receive(:new).with(app_registry)
+      expect(DummyRepository).to receive(:new).with(app_registry, {})
       app_registry.users
+    end
+    
+    context "with different DAO" do
+      let(:other_dao) { double }
+      
+      before do
+        app_registry.register(:user, DummyRepository, some_other_dao: other_dao)
+      end
+      
+      it "initialized repository with overriden DAO" do
+        expect(DummyRepository).to receive(:new).with(app_registry, some_other_dao: other_dao)
+        app_registry.users
+      end
     end
   end
 

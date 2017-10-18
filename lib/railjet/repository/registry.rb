@@ -1,6 +1,6 @@
 module Railjet
   module Repository
-    class Registry
+    class Registry      
       attr_reader :repositories, :initialized_repositories
       protected   :repositories, :initialized_repositories
       
@@ -9,8 +9,8 @@ module Railjet
         @initialized_repositories = {}
       end
 
-      def register(name, repository)
-        add_to_registry(name, repository)
+      def register(name, repository, **kwargs)
+        add_to_registry(name, repository, **kwargs)
         define_accessor(name)
       end
 
@@ -27,6 +27,19 @@ module Railjet
       end
 
       private
+      
+      class RegisteredRepository
+        attr_reader :repository, :additional_arguments
+        
+        def initialize(repository, **kwargs)
+          @repository           = repository
+          @additional_arguments = kwargs
+        end
+        
+        def initialize_repo(registry)
+          repository.new(registry, **additional_arguments)
+        end
+      end
 
       def initialize_copy(original)
         super
@@ -36,9 +49,9 @@ module Railjet
         @registry_module          = nil
       end
 
-      def add_to_registry(name, repository)
+      def add_to_registry(name, repository, **kwargs)
         initialized_repositories[name] = nil
-        repositories[name]             = repository
+        repositories[name]             = RegisteredRepository.new(repository, **kwargs)       
       end
 
       def get_from_registry(name)
@@ -46,7 +59,7 @@ module Railjet
       end
 
       def initialize_repo(name)
-        initialized_repositories[name] ||= get_from_registry(name).new(self)
+        initialized_repositories[name] ||= get_from_registry(name).initialize_repo(self)
       end
 
       def define_accessor(name)
