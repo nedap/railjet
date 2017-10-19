@@ -9,7 +9,7 @@ module Railjet
         attr_accessor :type
       end
 
-      def initialize(dao)
+      def initialize(dao = nil)
         @dao  = dao
         @type = self.class.type
       end

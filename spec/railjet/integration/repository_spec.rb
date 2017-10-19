@@ -128,7 +128,7 @@ describe "Repository & Registry" do
       include Railjet::Repository
       
       class RedisRepository
-        include Railjet::Repository::Redis[]
+        include Railjet::Repository::Redis.new
       end
     end
     
