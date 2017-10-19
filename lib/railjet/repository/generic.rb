@@ -25,29 +25,26 @@ module Railjet
 
       def define_dao_accessor(type, dao)
         define_method type do
-          @dao ||= dao.constantize if dao.respond_to?(:constantize)
+          instance_variable_get("@#{type}") || instance_variable_set("@#{type}", (dao.constantize if dao.respond_to?(:constantize)))
         end
       end
 
       def define_type_accessor(klass, type)
-        klass.define_singleton_method(:type) do
-          type
-        end
+        klass.define_singleton_method(:type) { type }
       end
 
       def define_initializer(klass)
         klass.class_eval do
           attr_reader :registry
 
-          def initialize(registry, dao: nil)
+          def initialize(registry, **kwargs)
             @registry = registry
-            @dao      = dao
+            instance_variable_set("@#{self.class.type}", kwargs.fetch(self.class.type, nil))
 
-            # Let's check if DAO was set through registry
-            if dao.nil?
-              # Nope. Maybe it was set when including inner repo mixin
-              send(self.class.type) || raise(ArgumentError, "Your repository #{self.class} need a DAO. It can be set with inner-repo mixin  or through registry with `#{self.class.type}:` option")
-            end            
+            # Let's check if DAO was set through registry or set when including inner repo mixin
+            unless send(self.class.type)
+              raise ArgumentError, "Your repository #{self.class} need a DAO. It can be set with inner-repo mixin  or through registry with `#{self.class.type}:` option"
+            end
           end
         end
       end
