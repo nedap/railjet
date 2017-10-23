@@ -32,7 +32,7 @@ module Railjet
       ivar = "@#{repository.type}"
       dao  = kwargs[repository.type]
 
-      instance_variable_set(ivar, repository.new(registry, dao: dao))
+      instance_variable_set(ivar, repository.new(registry, :"#{repository.type}" => dao))
       self.class.send :attr_reader, repository.type
     end
   end

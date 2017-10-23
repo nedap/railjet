@@ -2,14 +2,14 @@ module Railjet
   module Repository
     class Generic < Module
       class << self
-        def [](dao)
+        def [](dao = nil)
           new(dao)
         end
 
         attr_accessor :type
       end
 
-      def initialize(dao)
+      def initialize(dao = nil)
         @dao  = dao
         @type = self.class.type
       end
@@ -18,32 +18,40 @@ module Railjet
         define_dao_accessor(@type, @dao)
         define_type_accessor(klass, @type)
         define_initializer(klass)
-
-        klass.send :include, self.class::RepositoryMethods
+        include_repository_methods(klass)
       end
 
       private
 
       def define_dao_accessor(type, dao)
         define_method type do
-          @dao ||= dao.constantize
+          instance_variable_get("@#{type}") || instance_variable_set("@#{type}", (dao.constantize if dao.respond_to?(:constantize)))
         end
       end
 
       def define_type_accessor(klass, type)
-        klass.define_singleton_method(:type) do
-          type
-        end
+        klass.define_singleton_method(:type) { type }
       end
 
       def define_initializer(klass)
         klass.class_eval do
           attr_reader :registry
 
-          def initialize(registry, dao: nil)
+          def initialize(registry, **kwargs)
             @registry = registry
-            @dao      = dao
+            instance_variable_set("@#{self.class.type}", kwargs.fetch(self.class.type, nil))
+
+            # Let's check if DAO was set through registry or set when including inner repo mixin
+            unless send(self.class.type)
+              raise ArgumentError, "Your repository #{self.class} need a DAO. It can be set with inner-repo mixin  or through registry with `#{self.class.type}:` option"
+            end
           end
+        end
+      end
+      
+      def include_repository_methods(klass)
+        if defined?(self.class::RepositoryMethods)
+          klass.send :include, self.class::RepositoryMethods
         end
       end
     end

@@ -122,4 +122,36 @@ describe "Repository & Registry" do
       expect(registry.tasks).to be_instance_of DummyTaskRepository
     end
   end
+  
+  describe "DAO not specified in repository" do
+    class DummyEmployeeRepository
+      include Railjet::Repository
+      
+      class RedisRepository
+        include Railjet::Repository::Redis.new
+      end
+    end
+    
+    context "not set also in registry" do
+      before do
+        registry.register(:employee, DummyEmployeeRepository)
+      end
+      
+      it "raise exception when repo is called for first time" do
+        expect { registry.employees }.to raise_exception ArgumentError, /Your repository DummyEmployeeRepository::RedisRepository need a DAO/
+      end
+    end
+    
+    context "set in registry" do
+      let(:redis_dao) { double }
+
+      before do
+        registry.register(:employee, DummyEmployeeRepository, redis: redis_dao)
+      end
+      
+      it "calls repo without errors" do
+        expect { registry.employees }.not_to raise_exception
+      end
+    end
+  end
 end
