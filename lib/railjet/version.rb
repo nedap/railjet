@@ -1,3 +1,3 @@
 module Railjet
-  VERSION = "2.0-pre.1"
+  VERSION = "2.0.pre1"
 end
