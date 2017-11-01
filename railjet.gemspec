@@ -25,9 +25,13 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry"
   spec.add_development_dependency "gemfury"
   spec.add_development_dependency "rake-version",         "~> 1.0"
+  spec.add_development_dependency "wisper-testing",       "~> 0.1.0"
+  spec.add_development_dependency "wisper-rspec",         "~> 0.0.3"
 
   spec.add_dependency             "activesupport",        '> 4'
   spec.add_dependency             "activemodel",          '> 4'
   spec.add_dependency             "virtus",               "~> 1.0.2"
   spec.add_dependency             "validates_timeliness", "~> 4.0.2"
+  spec.add_dependency             "wisper",               "~> 2.0"
+  spec.add_dependency             "wisper-sidekiq",       "~> 0.0.1"
 end
