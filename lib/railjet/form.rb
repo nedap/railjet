@@ -5,6 +5,10 @@ module Railjet
 
     included do
       const_set(:Error, Class.new(Railjet::FormError))
+      
+      def initialize(attributes = {})
+        super(attributes.to_h)
+      end
     end
   end
 end
