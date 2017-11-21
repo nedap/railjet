@@ -7,7 +7,7 @@ module Railjet
       const_set(:Error, Class.new(Railjet::FormError))
       
       def initialize(attributes = {})
-        super(attributes.to_h)
+        super(attributes.respond_to?(:to_unsafe_h) ? attributes.to_unsafe_h : attributes)
       end
     end
   end
