@@ -26,7 +26,7 @@ module Railjet
 
     def define_accessor(name, value)
       instance_variable_set("@#{name}", value)
-      self.class.send(:attr_reader, name)
+      define_singleton_method(name) { instance_variable_get(:"@#{name}") }
     end
   end
 end
