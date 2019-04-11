@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    railjet (2.1)
+    railjet (2.1.0)
       activemodel (> 4)
       activesupport (> 4)
       validates_timeliness (~> 4.0.2)
