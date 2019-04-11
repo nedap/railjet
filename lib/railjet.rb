@@ -43,6 +43,7 @@ require "railjet/form"
 require "railjet/policy"
 require "railjet/composed_policy"
 require "railjet/use_case"
+require "railjet/presenter"
 
 require "railjet/repository/registry"
 require "railjet/repository"
