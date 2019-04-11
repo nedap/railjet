@@ -27,6 +27,18 @@ class DummyEmployeePresenter
   end
 end
 
+class DummyPresenterFactory
+  include Railjet::Presenter::Factory
+
+  def self.presenter_class(object)
+    if object.client?
+      DummyClientPresenter
+    else
+      DummyEmployeePresenter
+    end
+  end
+end
+
 describe Railjet::Presenter do
   let(:client_one) { double(id: 1, display_name: "John Doe") }
   let(:client_two) { double(id: 2, display_name: "Anna Doe") }
@@ -69,5 +81,14 @@ describe Railjet::Presenter::WithContext do
     it "can be initialized with context and multiple objects" do
       expect(presenters.map(&:as_json)).to eq([{ id: 1, name: "John Doe", can_edit_events: true }, { id: 2, name: "Anna Doe", can_edit_events: true }])
     end
+  end
+end
+
+describe Railjet::Presenter::Factory do
+  subject(:presenter) { DummyPresenterFactory.present_collection([object]) }
+  let(:object) { double(client?: true) }
+
+  it "initializes proper presenter based on #presenter_class method" do
+    expect(presenter[0]).to be_instance_of DummyClientPresenter
   end
 end
