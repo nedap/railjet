@@ -8,25 +8,29 @@ module Railjet
       @object = object
     end
 
+    attr_reader :object
+
     def as_json(*)
       raise NotImplementedError
     end
 
     module ClassMethods
       def present_collection(objects)
-        objects.map { |o| new(o) }
+        objects.map { |o| present(o) }
       end
 
-      private
+      def present(object)
+        new(object)
+      end
 
-      def present(name)
-        define_method(name) { instance_variable_get(:@object) }
-        private name
+      def object(name)
+        alias_method name, :object
       end
     end
 
     module WithContext
       extend ActiveSupport::Concern
+      include Railjet::Presenter
 
       included do
         attr_reader :context
@@ -40,7 +44,15 @@ module Railjet
 
       module ClassMethods
         def present_collection(context, objects)
-          objects.map { |o| new(context, o) }
+          objects.map { |o| present(context, o) }
+        end
+
+        def present(context, object)
+          new(context, object)
+        end
+
+        def context(*context_members)
+          delegate *context_members, to: :context
         end
       end
 

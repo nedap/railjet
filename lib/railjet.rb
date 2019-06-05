@@ -44,6 +44,7 @@ require "railjet/policy"
 require "railjet/composed_policy"
 require "railjet/use_case"
 require "railjet/presenter"
+require "railjet/presenter_context"
 
 require "railjet/repository/registry"
 require "railjet/repository"

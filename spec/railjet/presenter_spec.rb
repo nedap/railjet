@@ -2,7 +2,7 @@ require "railjet/presenter"
 
 class DummyClientPresenter
   include Railjet::Presenter
-  present :client
+  object :client
 
   def as_json(*)
     {
@@ -13,16 +13,16 @@ class DummyClientPresenter
 end
 
 class DummyEmployeePresenter
-  include Railjet::Presenter
   include Railjet::Presenter::WithContext
-  present :employee
+  context :current_ability
+  object  :employee
 
   def as_json(*)
     {
       id:   employee.id,
       name: employee.display_name,
 
-      can_edit_events: context.current_ability.can_edit_events?
+      can_edit_events: current_ability.can_edit_events?
     }
   end
 end
@@ -44,7 +44,7 @@ describe Railjet::Presenter do
   let(:client_two) { double(id: 2, display_name: "Anna Doe") }
 
   describe "::present" do
-    subject(:presenter) { DummyClientPresenter.new(client_one) }
+    subject(:presenter) { DummyClientPresenter.present(client_one) }
 
     it "creates an accessor for @object ivar" do
       expect(presenter.as_json).to eq({ id: 1, name: "John Doe" })
@@ -68,7 +68,7 @@ describe Railjet::Presenter::WithContext do
   let(:current_ability) { double(can_edit_events?: true) }
 
   describe "::initialize" do
-    let(:presenter) { DummyEmployeePresenter.new(context, employee_one) }
+    let(:presenter) { DummyEmployeePresenter.present(context, employee_one) }
 
     it "can be initialized with context" do
       expect(presenter.as_json).to eq({ id: 1, name: "John Doe", can_edit_events: true })
