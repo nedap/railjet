@@ -3,6 +3,14 @@
 
 ![Railjet](https://www.swisspasses.com/railpass/popup/railjet/slideshow/RailJet-Zuerich-St.-Anton-Transfer-Ticket-from-Swisspasses.com.jpg)
 
+## Philosophy
+
+We all know how good it feels to start a greenfield project in Rails. At that point Rails Way makes you move amazingly fast - you just create your models, include some gems in Gemfile and boom, your prototype is almost there. This is what almost every tutorial or a book will show you. But what's going to happen when your app is not generic small-to-mid-size-app? What if you have to start breaking those Rails conventions that made you fall in love with Rails in the first place? That could be because of using multiple data storages, working with legacy URLs or DB schemas, having tons of domain logic that is making your ActiveModel so fat that no diet can help. We all know DHH's answer to that - Concerns. And yeah, they're cool for extracting shared behaviour out of models, but that's it.
+
+Seems like Rails does not have a good answer. But what if someone else already had it? People are writing complex software for decades now, they had to come up with some ideas how to keep them clean, simple and maintainable.
+
+See our Wiki for more extended information railjethttps://github.com/nedap/railjet/wiki
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -18,14 +26,6 @@ And then execute:
 Or install it yourself as:
 
     $ gem install railjet
-
-## Philosophy
-
-We all know how good it feels to start a greenfield project in Rails. At that point Rails Way makes you move amazingly fast - you just create your models, include some gems in Gemfile and boom, your prototype is almost there. This is what almost every tutorial or a book will show you. But what's going to happen when your app is not generic small-to-mid-size-app? What if you have to start breaking those Rails conventions that made you fall in love with Rails in the first place? That could be because of using multiple data storages, working with legacy URLs or DB schemas, having tons of domain logic that is making your ActiveModel so fat that no diet can help. We all know DHH's answer to that - Concerns. And yeah, they're cool for extracting shared behaviour out of models, but that's it.
-
-Seems like Rails does not have a good answer. But what if someone else already had it? People are writing complex software for decades now, they had to come up with some ideas how to keep them clean, simple and maintainable.
-
-See our Wiki for more extended information railjethttps://github.com/nedap/railjet/wiki
 
 ## Example Usage
 
