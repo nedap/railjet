@@ -1,4 +1,4 @@
-# Railjet, architecture for high-speed railway   [![Build Status](https://nedap-opensource.semaphoreci.com/badges/railjet.svg?style=shields)](https://semaphoreci.com/nedap/railjet)
+# Railjet, architecture for high-speed railway   [![Build Status](https://nedap-opensource.semaphoreci.com/badges/railjetbranches/master.svg?style=shields)](https://semaphoreci.com/nedap/railjet)
 
 
 ![Railjet](https://www.swisspasses.com/railpass/popup/railjet/slideshow/RailJet-Zuerich-St.-Anton-Transfer-Ticket-from-Swisspasses.com.jpg)
@@ -9,7 +9,7 @@ We all know how good it feels to start a greenfield project in Rails. At that po
 
 Seems like Rails does not have a good answer. But what if someone else already had it? People are writing complex software for decades now, they had to come up with some ideas how to keep them clean, simple and maintainable.
 
-See our Wiki for more extended information on railjet why and how [wiki](https://github.com/nedap/railjet/wiki)
+See our [wiki](https://github.com/nedap/railjet/wiki) for more extended information on railjet why and how 
 
 ## Installation
 
