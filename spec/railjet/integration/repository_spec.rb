@@ -55,6 +55,36 @@ describe "Repository & Registry" do
     registry.register(:task, DummyTaskRepository)
   end
 
+  describe "calling default record functions" do
+    let(:task_one) { DummyTaskRecord.new(1) }
+
+    it 'find_by_id' do
+      expect(DummyTaskRecord).to receive(:find).with(1).and_return(task_one)
+
+      task = registry.tasks.find_by_id(1)
+
+      expect(task).to eq task_one
+    end
+
+    it 'find_by_ids' do
+      expect(DummyTaskRecord).to receive(:where).with(id: 1).and_return([task_one])
+
+      tasks = registry.tasks.find_by_ids(1)
+
+      expect(tasks.count).to eq 1
+      expect(tasks[0]).to eq task_one
+    end
+
+    it 'all' do
+      expect(DummyTaskRecord).to receive(:all).and_return([task_one])
+
+      tasks = registry.tasks.all
+
+      expect(tasks.count).to eq 1
+      expect(tasks[0]).to eq task_one
+    end
+  end
+
   describe "calling another repo" do
     let(:user_one) { DummyUserRecord.new(1) }
     let(:user_two) { DummyUserRecord.new(2) }
@@ -122,33 +152,33 @@ describe "Repository & Registry" do
       expect(registry.tasks).to be_instance_of DummyTaskRepository
     end
   end
-  
+
   describe "DAO not specified in repository" do
     class DummyEmployeeRepository
       include Railjet::Repository
-      
+
       class RedisRepository
         include Railjet::Repository::Redis.new
       end
     end
-    
+
     context "not set also in registry" do
       before do
         registry.register(:employee, DummyEmployeeRepository)
       end
-      
+
       it "raise exception when repo is called for first time" do
         expect { registry.employees }.to raise_exception ArgumentError, /Your repository DummyEmployeeRepository::RedisRepository need a DAO/
       end
     end
-    
+
     context "set in registry" do
       let(:redis_dao) { double }
 
       before do
         registry.register(:employee, DummyEmployeeRepository, redis: redis_dao)
       end
-      
+
       it "calls repo without errors" do
         expect { registry.employees }.not_to raise_exception
       end

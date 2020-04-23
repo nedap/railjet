@@ -10,6 +10,10 @@ module Railjet
           record.all
         end
 
+        def find_by_id(id)
+          record.find(id)
+        end
+
         def find_by_ids(ids)
           record.where(id: ids)
         end
