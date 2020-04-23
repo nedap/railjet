@@ -12,9 +12,13 @@ blocks:
     task:
       jobs:
         - name: specs
+          matrix:
+            - env_var: RUBY_VERSION
+              values: [ "2.4.10", "2.5.8", "2.6.6", "2.7.1" ]
           commands:
+            - sem-version ruby $RUBY_VERSION
+            - bundle install --path vendor/bundle
             - bundle exec rake spec
       prologue:
         commands:
           - checkout
-          - bundle install --path vendor/bundle
