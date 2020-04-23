@@ -9,7 +9,7 @@ We all know how good it feels to start a greenfield project in Rails. At that po
 
 Seems like Rails does not have a good answer. But what if someone else already had it? People are writing complex software for decades now, they had to come up with some ideas how to keep them clean, simple and maintainable.
 
-See our Wiki for more extended information railjethttps://github.com/nedap/railjet/wiki
+See our Wiki for more extended information on railjet why and how [wiki](https://github.com/nedap/railjet/wiki)
 
 ## Installation
 
