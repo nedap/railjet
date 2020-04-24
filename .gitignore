@@ -1,3 +1,4 @@
+Gemfile.lock
 *.rbc
 capybara-*.html
 /log
