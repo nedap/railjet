@@ -1,5 +1,7 @@
-# Railjet, architecture for high-speed railway   [![Build Status](https://nedap-opensource.semaphoreci.com/badges/railjet/branches/master.svg?style=shields)](https://semaphoreci.com/nedap/railjet)
+# Railjet, architecture for high-speed railway
 
+[![Build Status](https://nedap-opensource.semaphoreci.com/badges/railjet/branches/master.svg?style=shields)](https://semaphoreci.com/nedap/railjet) 
+<a href="https://codeclimate.com/github/nedap/railjet/maintainability"><img src="https://api.codeclimate.com/v1/badges/457bb41a82546fd6e459/maintainability" /></a>
 
 ![Railjet](https://www.swisspasses.com/railpass/popup/railjet/slideshow/RailJet-Zuerich-St.-Anton-Transfer-Ticket-from-Swisspasses.com.jpg)
 
