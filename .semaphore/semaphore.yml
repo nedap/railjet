@@ -1,5 +1,5 @@
 version: v1.0
-name: Initial Pipeline
+name: Railjet Pipeline
 agent:
   machine:
     type: e1-standard-2
@@ -8,8 +8,11 @@ auto_cancel:
   running:
     when: "branch != 'master'"
 blocks:
-  - name: 'Block #1'
+  - name: 'Rspec'
     task:
+      env_vars:
+        - name: CC_TEST_REPORTER_ID
+          value: 9cfd93bf8178ecfe837889113add5d001b2110503d238294a56ac7dcb3286852
       jobs:
         - name: specs
           matrix:
@@ -18,7 +21,9 @@ blocks:
           commands:
             - sem-version ruby $RUBY_VERSION
             - bundle install --path vendor/bundle
+            - source ./.semaphore/setup_codeclimate_test_coverage.sh
             - bundle exec rake spec
+            - ./cc-test-reporter upload-coverage
       prologue:
         commands:
           - checkout
