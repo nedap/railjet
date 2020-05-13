@@ -23,6 +23,7 @@ blocks:
             - bundle install --path vendor/bundle
             - source ./.semaphore/setup_codeclimate_test_coverage.sh
             - bundle exec rake spec
+            - ./cc-test-reporter format-coverage
             - ./cc-test-reporter upload-coverage
       prologue:
         commands:
