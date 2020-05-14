@@ -50,3 +50,11 @@ require "railjet/repository/registry"
 require "railjet/repository"
 require "railjet/repository/active_record"
 require "railjet/repository/redis"
+
+if defined?(Rails)
+  Rails::Application.console do
+    require "railjet/console/debug_helpers"
+
+    Railjet::Console::RailjetHelpers.load
+  end
+end
